@@ -13,6 +13,12 @@ This is the project composed with entire application system - chrome web extensi
 ## Usage
 Make Sure you have ```.env```
 
+### Requirements
+1. [Node.js](https://nodejs.org/ko/download/)
+2. [MySQL](https://dev.mysql.com/downloads/)
+3. [Docker](https://www.docker.com/products/docker-desktop)
+4. [Docker Compose](https://docs.docker.com/compose/install/)
+
 ### Run in Docker compose
 ```
 docker-compose up -d --build
@@ -34,11 +40,11 @@ Dependent on host machine process
 
 
 ## Installation
-- Need to load Web-extension codes into ![chrome extension managment page](chrome://extensions/)
+- Need to load Web-extension codes into [chrome extension managment page](chrome://extensions/)
   
-  ![Chrome official document](https://developer.chrome.com/extensions/getstarted)
+  [Chrome official document](https://developer.chrome.com/extensions/getstarted)
   
-- ```npm install``` as ```Node.js``` used in ![api server](https://github.com/FishermanSqaud/fish_and_chips/tree/main/api_server) and future React page
+- ```npm install``` as ```Node.js``` used in [API Server](https://github.com/FishermanSqaud/fish_and_chips/tree/main/api_server) and future React page
 
 - Just go to **INSERT WEBSITE ADDRESS**.
 
