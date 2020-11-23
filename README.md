@@ -1,2 +1,60 @@
-# fish_and_chips
-An application with web-extension, api server, database, etc for secure web usage recommendation
+# Project Fish and Chips
+This is the project composed with entire application system - chrome web extension, proxy, api server, database - with docker.
+
+## Motivation
+1. Make the web environment secure
+2. Prevent Fishing/Smishing/Spam Sites victims
+
+## Features
+- Notify the secure rate of currently visiting website
+- Intuitive and friendly UI.
+- Sign Up/Sign in
+
+## Usage
+Make Sure you have ```.env```
+
+### Run in Docker compose
+```
+docker-compose up -d --build
+```
+
+### Clean up in Docker compose
+```
+docker-compose down
+```
+
+### For native process
+1. API Server
+  ```
+  npm start
+  ```
+
+2. Database MySQL
+Dependent on host machine process
+
+
+## Installation
+- Need to load Web-extension codes into ![chrome extension managment page](chrome://extensions/)
+  
+  ![Chrome official document](https://developer.chrome.com/extensions/getstarted)
+  
+- ```npm install``` as ```Node.js``` used in ![api server](https://github.com/FishermanSqaud/fish_and_chips/tree/main/api_server) and future React page
+
+- Just go to **INSERT WEBSITE ADDRESS**.
+
+## Server 
+> IP : 	3.35.127.235 <br>
+
+- CI/CD 정보 :
+  미정
+  
+- 서버 구성도 :
+  1. 서버 구조
+  ![Screen Shot 2020-11-23 at 2 53 52 PM](https://user-images.githubusercontent.com/48001093/99932546-bc769180-2d9b-11eb-8cdc-eb80e1f9ae53.png)
+
+  
+- API docs 현재 미사용
+
+## Authors
+
+- ![Yechan Kim](https://github.com/LukeKim32)
