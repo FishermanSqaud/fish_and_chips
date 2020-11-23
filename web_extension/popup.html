@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/popup.css">
+    
+</head>
+
+<body>
+    <div class="background" id="background">
+
+        <div class="main">
+            <div id="iconContainer" class="iconContainer">
+
+                <img id="totalIcon" class="icon" alt="icon">
+            </div>
+
+            <div class="content">
+                <div 
+                    id="securityText" 
+                    class="securityText">
+                </div>
+
+                <div 
+                    id="helperText" 
+                    class="helperText">
+                </div>
+
+                <div class="navigation">
+                    <div 
+                        id="detailsBtn" 
+                        class="reportBtn" 
+                        style="margin-right: 5px;">
+                        자세히
+                    </div>
+
+                    <div class="reportBtn">
+                        신고하기
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        
+        <div 
+            id="details" 
+            class="details" 
+            style="display: none">
+
+            <div class="parameterContainer">
+
+                <div 
+                    id="iconContainer" 
+                    class="iconContainer">
+
+                    <img 
+                        id="encryptIcon" 
+                        class="icon" 
+                        alt="icon">
+                </div>
+
+                <div 
+                    id="encryptText" 
+                    class="parameter">
+                </div>
+
+            </div>
+
+            <div class="parameterContainer">
+
+                <div 
+                    id="iconContainer" 
+                    class="iconContainer relative">
+
+                    <img 
+                        id="reportIcon" 
+                        class="icon" 
+                        alt="icon">
+
+                    <div 
+                        id="reportCnt" 
+                        class="reportCnt">
+                    </div>
+
+                </div>
+
+                <div 
+                    id="reportText" 
+                    class="parameter">
+                    신고내역
+                </div>
+            </div>
+
+
+            <div class="parameterContainer">
+                <div 
+                    id="iconContainer" 
+                    class="iconContainer">
+
+                    <img 
+                        id="domainFoundIcon" 
+                        class="icon" 
+                        alt="icon">
+
+                </div>
+
+                <div 
+                    id="domainFoundText" 
+                    class="parameter">
+                </div>
+            </div>
+
+
+        </div>
+
+        <button id="changeStateBtn">Change State</button>
+
+    </div>
+
+    <script type="module" src="js/popup.js"></script>
+</body>
+
+</html>

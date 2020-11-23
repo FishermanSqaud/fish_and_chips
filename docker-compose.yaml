@@ -1,0 +1,54 @@
+version: '3'
+services:
+    proxy:
+        build:
+            context: .
+            dockerfile: ./docker/proxy/Dockerfile
+        container_name: proxy
+        networks:
+            fish_net:
+                ipv4_address: 172.28.0.2
+        env_file:
+            - ./.env
+        expose:
+            - "80"
+        ports:
+            - "8080:80"
+
+    database:
+        image: mysql:5.7.28
+        container_name: database
+        networks:
+            fish_net:
+                 ipv4_address: 172.28.0.3
+        volumes:
+            - ./docker/mount/mysql_db:/var/lib/mysql
+            - ./docker/database/init:/docker-entrypoint-initdb.d
+        expose :
+            - "3306"
+        env_file:
+            - ./.env
+
+    api_server:
+        build:
+            context: .
+            dockerfile: ./docker/api_server/Dockerfile
+        container_name: api_server
+        networks:
+            fish_net:
+                 ipv4_address: 172.28.0.4
+        volumes:
+            - ./docker/mount/api_server/logs:/app/logs
+        env_file:
+            - ./.env
+        expose :
+            - "8080"
+        depends_on:
+            - database
+
+networks:
+  fish_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
