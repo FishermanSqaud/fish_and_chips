@@ -46,8 +46,6 @@ Dependent on host machine process
   
 - ```npm install``` as ```Node.js``` used in [API Server](https://github.com/FishermanSqaud/fish_and_chips/tree/main/api_server) and future React page
 
-- Just go to **INSERT WEBSITE ADDRESS**.
-
 ## Server 
 > IP : 	3.35.127.235 <br>
 
