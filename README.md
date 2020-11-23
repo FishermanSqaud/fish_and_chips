@@ -63,4 +63,6 @@ Dependent on host machine process
 
 ## Authors
 
-- ![Yechan Kim](https://github.com/LukeKim32)
+- [김예찬](https://github.com/LukeKim32)
+- [이희준](https://github.com/lheejn)
+- [송민철](https://github.com/cs20081607)
