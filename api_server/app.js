@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const usersRouter = require('./routes/users')
 const authDomainsRouter = require('./routes/authDomains')
 const reportsRouter = require('./routes/reports')
+const verifyRouter = require('./routes/verify')
 require('dotenv').config()
 
 const port = process.env.API_SERVER_PORT
@@ -14,6 +15,7 @@ app.use(bodyParser.json())
 app.use(baseAPIPath + '/users', usersRouter)
 app.use(baseAPIPath + '/auth_domains', authDomainsRouter)
 app.use(baseAPIPath + '/reports', reportsRouter)
+app.use(baseAPIPath + '/verify', verifyRouter)
 
 app.get('/', (req, res) => {
     res.send('Sorry, Not Supported Path')
