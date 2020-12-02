@@ -9,6 +9,6 @@ authDomainsRouter.use(function timeLog(req, res, next) {
 
 });
 
-authDomainsRouter.post('/', authDomainsHandler.authDomains)
+// authDomainsRouter.post('/', authDomainsHandler.authDomains)
 
 module.exports = authDomainsRouter;
