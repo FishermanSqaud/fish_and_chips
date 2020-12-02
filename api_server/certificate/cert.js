@@ -33,7 +33,19 @@ exports.makeRequestOption = async (uri) => {
 }
 
 exports.getCertificateBuf = async (res) => {
-    return res.socket.getPeerCertificate(true).raw.toString('base64')
+    
+    const certificate = res.socket.getPeerCertificate(true)
+    
+    if (certificate == null || certificate == undefined){
+        return null
+    }
+
+    if (!('raw' in certificate)){
+        return null
+
+    } else {
+        return certificate.raw.toString('base64')
+    }
 }
 
 exports.makeCertificate = async (raw) => {

@@ -53,6 +53,19 @@ exports.verify = async (req, res) => {
 					responseFromDoubt
 				)
 
+				if (rawCertBuf == null || rawCertBuf == undefined){
+
+					res.setHeader(
+						consts.HEADER.CONTENT_TYPE,
+						consts.HEADER.TEXT
+					)
+		
+					res.status(consts.STATUS_CODE.BAD_REQUEST)
+						.send("Unable to get certificate from URL - Private Usage?")
+
+					return
+				}
+
 				const certificate = await cert.makeCertificate(
 					rawCertBuf
 				)
