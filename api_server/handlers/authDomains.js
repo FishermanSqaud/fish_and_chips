@@ -27,7 +27,6 @@ db.connect();
 
 
 // 웹 익스텐션 Request.body 키 값을 토큰화 시킨 도메인값을 domain 변수에 저장
-// 
 
 exports.testFunc = async (req, res) => {
 
