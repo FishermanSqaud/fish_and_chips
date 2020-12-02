@@ -7,7 +7,12 @@ verifyRouter.use(function timeLog(req, res, next) {
   next();
 });
 
-
-verifyRouter.use('/', verifyHandler.verify)
+// POST 
+// Header : Content-Type : application/json
+// Body : {
+//    "uri" : {검사하고 싶은 uri} 
+// }
+//
+verifyRouter.post('/', verifyHandler.verify)
 
 module.exports = verifyRouter;

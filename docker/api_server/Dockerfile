@@ -12,9 +12,14 @@ RUN npm install
 
 RUN apk update
 
+RUN apk add --update openssl && \
+    rm -rf /var/cache/apk/*
+
 RUN apk add --no-cache git
 
 RUN git clone https://github.com/eficode/wait-for.git
+
+ENV NODE_TLS_REJECT_UNAUTHORIZED '0'
 
 EXPOSE 8080
 
