@@ -57,8 +57,18 @@ exports.getRootCaCertFrom = async (cert) => {
 
     try {
 
-        const subjectCname = cert.subject.getField('CN').value
-        const issuerCname= cert.issuer.getField('CN').value
+        const subject = cert.subject.getField('CN')
+        var issuer = cert.issuer.getField('CN')
+        if (issuer == null){
+            issuer = cert.issuer.getField('OU')
+        }
+
+        if (subject == null || issuer == null){
+            return null
+        }
+
+        const subjectCname = subject.value.split(' ')[0]
+        const issuerCname= issuer.value.split(' ')[0]
 
         if (subjectCname == issuerCname) {
             console.log(`루트 CA 인증서 가져오기 성공`)
