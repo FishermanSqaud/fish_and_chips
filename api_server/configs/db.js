@@ -20,6 +20,12 @@ exports.query = {
         create : 'insert into reports (spam_domain, user_id, title, content) values (?, ?, ?, ?)',
         update : 'update reports SET title=?, content=? where id=?',
         delete : 'delete from reports where id = ?'
+    },
+    authDomain : {
+        getWithDomain : 'select * from authenticated_domains where domain = ?',
+        create : 'insert into authenticated_domains (domain) values (?)',
+        update : 'update authenticated_domains SET domain=? where id=?',
+        delete : 'delete from authenticated_domains where id = ?'
     }
 }
 

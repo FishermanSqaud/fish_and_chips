@@ -86,14 +86,14 @@ exports.createReport = async (req, res) => {
 			return
 		}
 
+		// TO-DO : 로그인 토큰 확인
+
 		const userParams = [
 			req.body.spam_domain,
 			req.body.user_id,
 			req.body.title,
 			req.body.content
 		]
-
-		// TO-DO :이미 회원가입 되어 있는 정보인지 확인 해야함
 		
 		const result = await conn.sendQuery(
 			db.query.report.create,
@@ -159,8 +159,6 @@ exports.updateReport = async (req, res) => {
 			req.body.content,
 			req.params.reportId // 없을 경우 이 핸들러로 들어오지 못함
 		]
-
-		// TO-DO :이미 회원가입 되어 있는 정보인지 확인 해야함
 		
 		const result = await conn.sendQuery(
 			db.query.report.update,
@@ -176,7 +174,7 @@ exports.updateReport = async (req, res) => {
 
 		} else {
 
-			res.status(consts.STATUS_CODE.OK)
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
 				.send("신고 내역 수정 실패")
 		}
 

@@ -18,11 +18,15 @@ require('dotenv').config()
 //        3-2-2. 상위 인증기관의 인증서 대신 OCSP (인증서 검출 프로토콜) 를 요청받을 경우, 일단 올바른 사이트로 응답
 //                (추후 OCSP 인증 기능까지 완료하여 추가해야함)
 //
+const isUriSent = (req) => {
+	return (('uri' in req.body) && req.body.uri != null)
+}
+
 exports.verify = async (req, res) => {
 
 	try {
 
-		if (!('uri' in req.body) || req.body.uri == null){
+		if (!isUriSent(req)){
 
 			res.setHeader(
 				consts.HEADER.CONTENT_TYPE,
@@ -61,7 +65,7 @@ exports.verify = async (req, res) => {
 					)
 		
 					res.status(consts.STATUS_CODE.BAD_REQUEST)
-						.send("Unable to get certificate from URL - Private Usage?")
+						.send("Unable to get certificate from URL")
 
 					return
 				}

@@ -8,9 +8,13 @@ verifyRouter.use(function timeLog(req, res, next) {
 });
 
 // POST 
-// Header : Content-Type : application/json
-// Body : {
-//    "uri" : {검사하고 싶은 uri} 
+// Request Body : {
+//    "uri" : string
+// }
+//
+// Response body :
+// {
+//    result : boolean
 // }
 //
 verifyRouter.post('/', verifyHandler.verify)

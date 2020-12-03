@@ -11,61 +11,122 @@ require('dotenv').config()
 //        3-1. 출력이 되면 논 피싱. authenticated_domains에 검사할 사이트 도메인 레코드가 존재. 그러므로 논피싱
 //        3-2. 출력이 안되면 피싱. authenticated_domains에 검사할 사이트 도메인 레코드가 존재하지 않음. 고로 피싱)
 
-
-// var mysql = require('mysql');
-// var db = mysql.createConnection({
-//   host : 'database',
-//   user : 'root',
-//   password : 'root',
-//   database : 'fish_and_chips' 
-// })
-// db.connect();
-
-// 데이터베이스 fish_and_chips
-// 테이블 authenticated_domains
-// desc authenticated_domains
-
-
-// 웹 익스텐션 Request.body 키 값을 토큰화 시킨 도메인값을 domain 변수에 저장
-
-exports.testFunc = async (req, res) => {
+// POST to send uri
+//
+exports.checkIfAuthDomain = async (req, res) => {
 
 	try {
-		if (!('uri' in req.body) || req.body.uri == null){
 
-			res.setHeader(
-				consts.HEADER.CONTENT_TYPE,
-				consts.HEADER.TEXT
-			)
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		if (!isUriSent(req)){
 
 			res.status(consts.STATUS_CODE.BAD_REQUEST)
-				.send("")
-
-			return
+				.send("요청 도메인이 없습니다")
 		}
 
+		var conn = await db.getConn()
+
+		const userParams = [
+			req.body.uri
+		]
+		
+		const result = await conn.sendQuery(
+			db.query.authDomain.getWithDomain,
+			userParams
+		)
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
 			consts.HEADER.JSON
 		)
 
-		var domain = req.body.uri
-		
-		// 도메인명에 해당하는 테이블을 출력. 출력이 되면 논 피싱, 출력이 안되면 피싱
-		
-		var sql = 'SELECT ' + domain + ' FROM authenticated_domains';
-		db.query(sql, function(err,data){
-			if(err) {
-  				console.log('Fishing');
- 			} else {
- 				console.log('None Fishing');
-		  	}
-		})
-		
+		if (isDomainExists(result)){
+
+			res.status(consts.STATUS_CODE.OK)
+				.send(JSON.stringify({
+					isAuthenticated : true
+				}))
+
+		} else {
+
+			res.status(consts.STATUS_CODE.OK)
+				.send(JSON.stringify({
+					isAuthenticated : false
+				}))
+		}
 
 	} catch (e) {
-		console.log("Error where ? ", e)
+
+		console.log("error - ",e)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+		.send("서버 오류")
+	}
+}
+
+const isDomainExists = (result) => {
+	return result.results.length > 0
+}
+
+const isUriSent = (req) => {
+	return ('uri' in req.body) && req.body.uri != null
+}
+
+const isCreatedOk = (result) => {
+	return result.results.affectedRows == 1
+}
+
+// POST to send uri
+exports.registerAuthDomain = async (req, res) => {
+
+	try {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		var conn = await db.getConn()
+
+		// body 검사하기
+		if (!isUriSent(req)){
+			
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("생성할 데이터 부족")
+
+			return
+		}
+
+		const userParams = [
+			req.body.uri
+		]
+
+
+		// TO-DO :중복 생성 체크
+		
+		
+		const result = await conn.sendQuery(
+			db.query.authDomain.create,
+			userParams
+		)		
+		
+
+		if (isCreatedOk(result)){
+			
+			res.status(consts.STATUS_CODE.OK)
+				.send("등록 성공")
+
+		} else {
+
+			res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+				.send("등록 실패")
+		}
+
+	} catch (e) {
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
@@ -73,19 +134,120 @@ exports.testFunc = async (req, res) => {
 		)
 
 		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
-			.send("")
+			.send("서버 오류")
 	}
 }
 
-	
-		// var conn = await db.getConn()
+const isAuthDomainUpdateInfoSent = (req) => {
+	return ('uri' in req.body) && req.body.uri != null
+}
 
-		// Ex.
-		// query = "insert into users (email, password) values (?, ?)"
-		// params = ["captstone2", "1234"]
-		
-		// const result = await conn.sendQuery(
-		// 	query, // SQL Query
-		// 	params // Query Params
-		// )
+const isUpdatedOk = (result) => {
+	return result.results.affectedRows == 1
+}
+
+exports.updateAuthDomain = async (req, res) => {
+
+	try {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		if (!isAuthDomainUpdateInfoSent(req)){
 	
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("인증 도메인 수정 데이터 부족")
+
+			return
+		}
+		
+		var conn = await db.getConn()
+
+		const userParams = [
+			req.body.uri,
+			req.params.authDomainId 
+		]
+		
+		const result = await conn.sendQuery(
+			db.query.authDomain.update,
+			userParams
+		)
+
+		// console.log("수정 결과 ", result)
+
+		if (isUpdatedOk(result)){
+
+			res.status(consts.STATUS_CODE.OK)
+				.send("인증 도메인 데이터 수정 성공")
+
+		} else {
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("인증 도메인 데이터수정 실패")
+		}
+
+
+	} catch (e) {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+			.send("서버 오류")
+	}
+}
+
+
+const isDeletedSuccess = (result) => {
+	return result.results.affectedRows == 1
+}
+
+// For Admin User
+exports.deleteReport = async (req, res) => {
+
+	try {
+
+		var conn = await db.getConn()
+
+		const userParams = [
+			req.params.authDomainId
+		]
+		
+		const result = await conn.sendQuery(
+			db.query.authDomain.delete,
+			userParams
+		)
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		// IF Deleted
+		if (isDeletedSuccess(result)){
+	
+			res.status(consts.STATUS_CODE.OK)
+				.send("삭제 성공")
+	
+		} else {
+	
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("삭제 실패")
+		}
+
+
+	} catch (e) {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+		.send("서버 오류")
+	}
+}
