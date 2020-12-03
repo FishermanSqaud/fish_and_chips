@@ -14,6 +14,12 @@ exports.query = {
         get :  `select * from users where email = ?`,
         getWithPwd : `select * from users where email = ? and password = ?`,
         delete : `delete from users where email = ?`
+    },
+    report : {
+        getWithDomain : 'select * from reports where spam_domain = ?',
+        create : 'insert into reports (spam_domain, user_id, title, content) values (?, ?, ?, ?)',
+        update : 'update reports SET title=?, content=? where id=?',
+        delete : 'delete from reports where id = ?'
     }
 }
 
