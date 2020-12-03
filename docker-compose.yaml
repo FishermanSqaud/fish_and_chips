@@ -23,6 +23,7 @@ services:
                  ipv4_address: 172.28.0.3
         volumes:
             - ./docker/mount/mysql_db:/var/lib/mysql
+            - ./docker/database/config.cnf:/etc/mysql/my.cnf
             - ./docker/database/init:/docker-entrypoint-initdb.d
         expose :
             - "3306"
