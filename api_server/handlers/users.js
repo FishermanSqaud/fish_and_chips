@@ -3,6 +3,34 @@ const auth = require('../configs/auth')
 const consts = require('../configs/constants')
 require('dotenv').config()
 
+const isEmailDuplicate = async (email) => {
+
+	try {
+
+		var conn = await db.getConn()
+
+		const userParams = [
+			email
+		]
+
+		const result = await conn.sendQuery(
+			db.query.user.get,
+			userParams
+		)
+
+		if (result.results.length > 0){
+			return true
+		}
+
+		return false
+
+	} catch (e) {
+		throw e
+	}
+
+
+}
+
 exports.signUp = async (req, res) => {
 
 	try {
@@ -19,15 +47,27 @@ exports.signUp = async (req, res) => {
 			return
 		}
 
+		console.log("회원가입 요청 받음")
+
+
+		if (await isEmailDuplicate(req.body.email)) {
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("중복된 정보입니다")
+
+			return
+		}
+
 		var conn = await db.getConn()
 
 		const userParams = [
 			req.body.email,
-			req.body.password
+			req.body.password,
+			req.body.name
 		]
 
 		// TO-DO :이미 회원가입 되어 있는 정보인지 확인 해야함
-		
+
 		const result = await conn.sendQuery(
 			db.query.user.create,
 			userParams
@@ -41,10 +81,10 @@ exports.signUp = async (req, res) => {
 	} catch (e) {
 
 		console.log("error in signup", e)
-		
+
 		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
 			.send("서버 오류")
-		
+
 	}
 
 }
@@ -69,6 +109,9 @@ exports.signIn = async (req, res) => {
 			return
 		}
 
+
+		console.log("로그인 요청 받음")
+
 		var conn = await db.getConn()
 
 		const userParams = [
@@ -89,11 +132,22 @@ exports.signIn = async (req, res) => {
 
 			const token = await auth.publishJwt(payload)
 
-			res.setHeader(consts.HEADER.AUTH, token)
-			res.status(consts.STATUS_CODE.OK)
-				.send("로그인 성공, 헤더를 확인하세요")
+			const user = result.results[0]
 
-			console.log("로그인 성공")
+			res.setHeader(
+				consts.HEADER.CONTENT_TYPE,
+				consts.HEADER.JSON
+			)
+
+			res.setHeader(consts.HEADER.AUTH, token)
+
+			res.status(consts.STATUS_CODE.OK)
+				.send(JSON.stringify({
+					userName: user.name,
+					userId : user.id
+				}))
+
+			console.log("로그인 성공", user)
 
 		} else {
 
@@ -114,7 +168,7 @@ exports.signIn = async (req, res) => {
 		console.log("error in sign in", e)
 
 		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
-		.send("서버 오류")
+			.send("서버 오류")
 
 	}
 }
@@ -124,11 +178,12 @@ const isSignUpInfoSent = (req) => {
 
 	return (('email' in req.body && req.body.email != '')
 		&& ('password' in req.body && req.body.password != ''))
+		&& (('name' in req.body) && (req.body.name != ''))
 }
 
 
 const isSignInInfoSent = (req) => {
 
-	// Should customize key-value Req body
-	return isSignUpInfoSent(req)
+	return (('email' in req.body && req.body.email != '')
+		&& ('password' in req.body && req.body.password != ''))
 }

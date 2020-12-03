@@ -10,7 +10,7 @@ exports.pool = mysql.createPool({
 
 exports.query = {
     user : {
-        create : `insert into users (email, password) values (?, ?)`,
+        create : `insert into users (email, password, name) values (?, ?, ?)`,
         get :  `select * from users where email = ?`,
         getWithPwd : `select * from users where email = ? and password = ?`,
         delete : `delete from users where email = ?`
