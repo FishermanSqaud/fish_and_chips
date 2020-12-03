@@ -91,8 +91,23 @@ window.addEventListener("load", ()=> {
 })
 
 
+// localStorage.setItem("test2", window.location.href)
 
+chrome.tabs.query({active : true, 'windowId' : chrome.windows.WINDOW_ID_CURRENT, lastFocusedWindow : true}, tabs => {
+    const url = tabs[0].url;
+    
+    localStorage.setItem("report_domain", url)
+})
 
+let reportBtn = document.getElementById('reportBtn')
+if (reportBtn) {
+    reportBtn.onclick = () => {
+
+        const curDomain = localStorage.getItem("report_domain")
+        var reportPage = window.open(`http://localhost?report=${curDomain}`)//, '_blank',false)
+
+    }
+}
 // ==== DETAIL SECTION ==============================
 
 let detailsBtn = document.getElementById('detailsBtn')
