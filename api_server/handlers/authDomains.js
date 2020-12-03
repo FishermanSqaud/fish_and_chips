@@ -12,14 +12,14 @@ require('dotenv').config()
 //        3-2. 출력이 안되면 피싱. authenticated_domains에 검사할 사이트 도메인 레코드가 존재하지 않음. 고로 피싱)
 
 
-var mysql = require('mysql');
-var db = mysql.createConnection({
-  host : 'database',
-  user : 'root',
-  password : 'root',
-  database : 'fish_and_chips' 
-})
-db.connect();
+// var mysql = require('mysql');
+// var db = mysql.createConnection({
+//   host : 'database',
+//   user : 'root',
+//   password : 'root',
+//   database : 'fish_and_chips' 
+// })
+// db.connect();
 
 // 데이터베이스 fish_and_chips
 // 테이블 authenticated_domains
@@ -51,8 +51,6 @@ exports.testFunc = async (req, res) => {
 		)
 
 		var domain = req.body.uri
-
-		
 		
 		// 도메인명에 해당하는 테이블을 출력. 출력이 되면 논 피싱, 출력이 안되면 피싱
 		
@@ -63,7 +61,7 @@ exports.testFunc = async (req, res) => {
  			} else {
  				console.log('None Fishing');
 		  	}
-		}
+		})
 		
 
 	} catch (e) {
