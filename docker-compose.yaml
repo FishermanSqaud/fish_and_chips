@@ -8,8 +8,9 @@ services:
         networks:
             fish_net:
                 ipv4_address: 172.28.0.2
-        env_file:
-            - ./.env
+        args :
+            - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+            - GENERAGE_SOURCEMAP=false
         expose:
             - "80"
         ports:
