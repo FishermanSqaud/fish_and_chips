@@ -1,5 +1,6 @@
 // const consts = require('./consts')
 import {
+    securityLevel,
     securityTexts,
     icons,
     detailTexts,
@@ -16,44 +17,189 @@ let securityText = document.getElementById('securityText')
 let helperText = document.getElementById('helperText')
 
 
-// ===== Data Fetch Interface =======
-// ===== Curretnly Dummy data =======
-const requestEncryptCheck = () => {
-    return false
-}
-
-const requestReportCnt = () => {
-    return 0
-}
-
-const requestDomainCheck = () => {
-    return false
-}
 
 
 // ===== DATA FOR DETAILS =======
-let isEncrypted = requestEncryptCheck()
-let reportCnt = requestReportCnt()
-let isDomainFound = requestDomainCheck()
+let isEncrypted = false
+let reportCnt = 0
+let isDomainFound = false
 // ==================================
 
 
-// ===== DETAILS ELEMENTS ======
-let encryptIconEl = document.getElementById('encryptIcon')
-let encryptTextEl = document.getElementById('encryptText')
-let reportIconEl = document.getElementById('reportIcon')
-let reportCntEl = document.getElementById('reportCnt')
-let reportTextEl = document.getElementById('reportText')
-let domainFoundIconEl = document.getElementById('domainFoundIcon')
-let domainFoundTextEl = document.getElementById('domainFoundText')
+// ===== Data Fetch Interface =======
+// ===== Curretnly Dummy data =======
+const requestEncryptCheck = async () => {
+
+    try {
+
+        const curDomain = localStorage.getItem("report_domain")
+
+        const url = new URL(curDomain)
+        if (url.protocol == "http:"){            
+            return false
+        }
+
+        // Temp Hack
+        if (url.protocol == "https:"){
+            console.log("hey?")
+            return true
+        }
+
+        const response = await fetch(
+            'http://localhost/api/v1/verify',
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    uri: curDomain
+                })
+            }
+        )
+
+        console.log("인증서 확인 요청 결과 ", response)
+
+
+        if (response.ok) {
+            const responseJson = await response.json()
+
+            return responseJson.result
+
+        } else {
+            return false
+        }
+
+    } catch (e) {
+        console.log("request Encrypt Check error ", e)
+        return false
+    }
+}
+
+const requestReportCnt = async () => {
+
+    try {
+
+        const curDomain = localStorage.getItem("report_domain")
+
+        const response = await fetch(
+            'http://localhost/api/v1/reports/check',
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    spam_domain: curDomain
+                })
+            }
+        )
+
+        console.log("신고 내역 확인 요청 결과 ", response)
+
+
+        if (response.ok) {
+            const responseJson = await response.json()
+
+            return responseJson.reports.length
+
+        } else {
+            return 0
+        }
+
+    } catch (e) {
+        console.log("requestReportCnt error ", e)
+        return 0
+    }
+}
+
+const requestDomainCheck = async () => {
+
+    try {
+
+        const curDomain = localStorage.getItem("report_domain")
+
+        const response = await fetch(
+            'http://localhost/api/v1/auth_domains/check',
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    uri: curDomain
+                })
+            }
+        )
+
+        console.log("도메인 확인 요청 결과 ", response)
+
+        if (response.ok) {
+            const responseJson = await response.json()
+
+            return responseJson.isAuthenticated
+
+        } else {
+            return false
+        }
+
+    } catch (e) {
+        console.log("requestDomainCheck error ", e)
+        return false
+    }
+}
+
+const requestSecurityCheck = async () => {
+
+    let [isEncrypted, reportCnt, isDomainFound] =await Promise.all([
+        requestEncryptCheck(),
+        requestReportCnt(),
+        requestDomainCheck()
+    ])
+
+    // let isEncrypted = await requestEncryptCheck()
+    // let reportCnt = await requestReportCnt()
+    // let isDomainFound = await requestDomainCheck()
+
+    return [isEncrypted, reportCnt, isDomainFound]
+}
+
+
+async function main() {
+
+    // ===== DETAILS ELEMENTS ======
+    let encryptIconEl = document.getElementById('encryptIcon')
+    let encryptTextEl = document.getElementById('encryptText')
+    let reportIconEl = document.getElementById('reportIcon')
+    let reportCntEl = document.getElementById('reportCnt')
+    let reportTextEl = document.getElementById('reportText')
+    let domainFoundIconEl = document.getElementById('domainFoundIcon')
+    let domainFoundTextEl = document.getElementById('domainFoundText')
+
+    // Overview
+    let totalIcon = document.getElementById('totalIcon')
+    let securityText = document.getElementById('securityText')
+    let helperText = document.getElementById('helperText')
 
 
 
-window.addEventListener("load", ()=> {
+    let [isEncrypted, reportCnt, isDomainFound] = await requestSecurityCheck()
 
-    changeState(dummyStateIdx)()
+    const secureLevel = await evaluate(isEncrypted, reportCnt, isDomainFound)
 
-    if (encryptIconEl){
+    totalIcon.src = dummyIcons[secureLevel]
+    securityText.innerText = securityTexts[secureLevel].securityMsg
+    securityText.style.color = securityTexts[secureLevel].fontColor
+    helperText.innerText = securityTexts[secureLevel].helperMsg
+
+    if (secureLevel == securityLevel.SECURE){
+        isEncrypted = true
+    }
+
+    console.log("총 결과 : ", [isEncrypted, reportCnt, isDomainFound])
+    // changeState(dummyStateIdx)()
+
+    if (encryptIconEl) {
         if (isEncrypted) {
             encryptIconEl.src = icons.enryption.fine
             encryptTextEl.innerText = detailTexts.encryption.fine
@@ -62,24 +208,24 @@ window.addEventListener("load", ()=> {
             encryptTextEl.innerText = detailTexts.encryption.none
         }
     }
-    
-    if (reportCntEl){
+
+    if (reportCntEl) {
         reportCntEl.innerText = reportCnt
-    
-        if (reportCnt == 0){
+
+        if (reportCnt == 0) {
             reportIconEl.src = icons.report.none
-    
-        } else if (reportCnt <= reportThreshold){
+
+        } else if (reportCnt <= reportThreshold) {
             reportIconEl.src = icons.report.few
-    
+
         } else {
             reportIconEl.src = icons.report.many
         }
     }
-    
-    
-    if (domainFoundIconEl){
-    
+
+
+    if (domainFoundIconEl) {
+
         if (isDomainFound) {
             domainFoundIconEl.src = icons.domain.found
             domainFoundTextEl.innerText = detailTexts.domain.found
@@ -88,14 +234,152 @@ window.addEventListener("load", ()=> {
             domainFoundTextEl.innerText = detailTexts.domain.notFound
         }
     }
-})
+}
+
+main()
 
 
-// localStorage.setItem("test2", window.location.href)
 
-chrome.tabs.query({active : true, 'windowId' : chrome.windows.WINDOW_ID_CURRENT, lastFocusedWindow : true}, tabs => {
-    const url = tabs[0].url;
+// window.addEventListener("load", async () => {
+
+//     console.log("on load?")
+
+//     // ===== DETAILS ELEMENTS ======
+//     let encryptIconEl = document.getElementById('encryptIcon')
+//     let encryptTextEl = document.getElementById('encryptText')
+//     let reportIconEl = document.getElementById('reportIcon')
+//     let reportCntEl = document.getElementById('reportCnt')
+//     let reportTextEl = document.getElementById('reportText')
+//     let domainFoundIconEl = document.getElementById('domainFoundIcon')
+//     let domainFoundTextEl = document.getElementById('domainFoundText')
+//     // Overview
+//     let totalIcon = document.getElementById('totalIcon')
+//     let securityText = document.getElementById('securityText')
+//     let helperText = document.getElementById('helperText')
+
+
+
+//     let [isEncrypted, reportCnt, isDomainFound] = await requestSecurityCheck()
+
+//     const secureLevel = await evaluate(isEncrypted, reportCnt, isDomainFound)
+
+//     totalIcon.src = dummyIcons[secureLevel]
+//     securityText.innerText = securityTexts[secureLevel].securityMsg
+//     securityText.style.color = securityTexts[secureLevel].fontColor
+//     helperText.innerText = securityTexts[secureLevel].helperMsg
+
+//     if (secureLevel == securityLevel.SECURE){
+//         isEncrypted = true
+//     }
+
+//     console.log("총 결과 : ", [isEncrypted, reportCnt, isDomainFound])
+//     // changeState(dummyStateIdx)()
+
+//     if (encryptIconEl) {
+//         if (isEncrypted) {
+//             encryptIconEl.src = icons.enryption.fine
+//             encryptTextEl.innerText = detailTexts.encryption.fine
+//         } else {
+//             encryptIconEl.src = icons.enryption.none
+//             encryptTextEl.innerText = detailTexts.encryption.none
+//         }
+//     }
+
+//     if (reportCntEl) {
+//         reportCntEl.innerText = reportCnt
+
+//         if (reportCnt == 0) {
+//             reportIconEl.src = icons.report.none
+
+//         } else if (reportCnt <= reportThreshold) {
+//             reportIconEl.src = icons.report.few
+
+//         } else {
+//             reportIconEl.src = icons.report.many
+//         }
+//     }
+
+
+//     if (domainFoundIconEl) {
+
+//         if (isDomainFound) {
+//             domainFoundIconEl.src = icons.domain.found
+//             domainFoundTextEl.innerText = detailTexts.domain.found
+//         } else {
+//             domainFoundIconEl.src = icons.domain.notFound
+//             domainFoundTextEl.innerText = detailTexts.domain.notFound
+//         }
+//     }
+
+
+// })
+
+const evaluate = async (isEncrypted, reportCnt, isDomainFound) => {
+
+
+
+    if (isDomainFound){ // 기업인증이 된 경우, 별도로 신고내역은 반영하지 않는다
+        
+        if (isEncrypted) {
+
+            return securityLevel.SECURE
+
+        } else {
+
+
+            const curDomain = localStorage.getItem("report_domain")
+
+            const url = new URL(curDomain)
+
+            if (url.protocol == "https:"){
+
+                return securityLevel.SECURE
+
+            } else {
+                return securityLevel.LOW_REPORT_NO_ENCRYPT
+            }
+        }
+
+    } else {
+
+        if (reportCnt >= reportThreshold){ // 피싱으로 의심 신고가 적당히 들어온 경우
+
+            if (isEncrypted){ // 피싱사이트인데 암호화를 했을 수도 있다
+
+                return securityLevel.HIGH_REPORT_YES_ENCRYPT
+
+            } else {
+                return securityLevel.DANGER
+            }
+
+        } else { // 피싱 의심 신고가 적은 경우
+
+            if (isEncrypted){ // 암호화 피싱사이트인데 아직 신고가 적은 경우 일 수도 있다.
+
+                return securityLevel.SECURE_BUT_DOUBTFUL
+
+            } else { // 정상 사이트인데 암호화를 안 했을 수도 있다.
+                return securityLevel.LOW_REPORT_NO_ENCRYPT
+            }
+        }
+    }
+}
+
+
+
+// ==== Passing Domain Data to Client Page ==============================
+
+const chromeTabOption = {
+    active: true,
     
+    // currentWindow: true
+    // 'windowId': chrome.windows.WINDOW_ID_CURRENT,
+    lastFocusedWindow: true
+}
+
+chrome.tabs.query(chromeTabOption, tabs => {
+    const url = tabs[0].url;
+
     localStorage.setItem("report_domain", url)
 })
 
@@ -104,10 +388,12 @@ if (reportBtn) {
     reportBtn.onclick = () => {
 
         const curDomain = localStorage.getItem("report_domain")
-        var reportPage = window.open(`http://localhost?report=${curDomain}`)//, '_blank',false)
-
+        window.open(`http://localhost?report=${curDomain}`)
     }
 }
+
+
+
 // ==== DETAIL SECTION ==============================
 
 let detailsBtn = document.getElementById('detailsBtn')
@@ -117,7 +403,7 @@ let isDetailOpen = false
 const openDetailSection = (isDetailOpen) => () => {
 
 
-    if (isDetailOpen){
+    if (isDetailOpen) {
         details.style.display = "none"
         detailsBtn.innerText = "자세히"
         isDetailOpen = false
@@ -137,7 +423,7 @@ const openDetailSection = (isDetailOpen) => () => {
     }
 }
 
-if (detailsBtn){
+if (detailsBtn) {
     detailsBtn.onclick = openDetailSection(isDetailOpen)
 }
 
@@ -159,7 +445,7 @@ const changeState = (dummyStateIdx) => () => {
     dummyStateIdx += 1
 }
 
-if (changeStateBtn){
+if (changeStateBtn) {
     //Dummy Code
     changeStateBtn.onclick = changeState(dummyStateIdx + 1)
 }

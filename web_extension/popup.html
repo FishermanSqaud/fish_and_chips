@@ -4,7 +4,15 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/popup.css">
-    
+    <script>
+
+        chrome.tabs.query(chromeTabOption, tabs => {
+            const url = tabs[0].url;
+
+            localStorage.setItem("report_domain", url)
+        })
+    </script>
+
 </head>
 
 <body>
@@ -17,27 +25,18 @@
             </div>
 
             <div class="content">
-                <div 
-                    id="securityText" 
-                    class="securityText">
+                <div id="securityText" class="securityText">
                 </div>
 
-                <div 
-                    id="helperText" 
-                    class="helperText">
+                <div id="helperText" class="helperText">
                 </div>
 
                 <div class="navigation">
-                    <div 
-                        id="detailsBtn" 
-                        class="reportBtn" 
-                        style="margin-right: 5px;">
+                    <div id="detailsBtn" class="reportBtn" style="margin-right: 5px;">
                         자세히
                     </div>
 
-                    <div 
-                        id="reportBtn"
-                        class="reportBtn">
+                    <div id="reportBtn" class="reportBtn">
                         신고하기
                     </div>
                 </div>
@@ -45,79 +44,53 @@
 
         </div>
 
-        
-        <div 
-            id="details" 
-            class="details" 
-            style="display: none">
+
+        <div id="details" class="details" style="display: none">
 
             <div class="parameterContainer">
 
-                <div 
-                    id="iconContainer" 
-                    class="iconContainer">
+                <div id="iconContainer" class="iconContainer">
 
-                    <img 
-                        id="encryptIcon" 
-                        class="icon" 
-                        alt="icon">
+                    <img id="encryptIcon" class="icon" alt="icon">
                 </div>
 
-                <div 
-                    id="encryptText" 
-                    class="parameter">
+                <div id="encryptText" class="parameter">
                 </div>
 
             </div>
 
             <div class="parameterContainer">
 
-                <div 
-                    id="iconContainer" 
-                    class="iconContainer relative">
+                <div id="iconContainer" class="iconContainer relative">
 
-                    <img 
-                        id="reportIcon" 
-                        class="icon" 
-                        alt="icon">
+                    <img id="reportIcon" class="icon" alt="icon">
 
-                    <div 
-                        id="reportCnt" 
-                        class="reportCnt">
+                    <div id="reportCnt" class="reportCnt">
                     </div>
 
                 </div>
 
-                <div 
-                    id="reportText" 
-                    class="parameter">
+                <div id="reportText" class="parameter">
                     신고내역
                 </div>
             </div>
 
 
             <div class="parameterContainer">
-                <div 
-                    id="iconContainer" 
-                    class="iconContainer">
+                <div id="iconContainer" class="iconContainer">
 
-                    <img 
-                        id="domainFoundIcon" 
-                        class="icon" 
-                        alt="icon">
+                    <img id="domainFoundIcon" class="icon" alt="icon">
 
                 </div>
 
-                <div 
-                    id="domainFoundText" 
-                    class="parameter">
+                <div id="domainFoundText" class="parameter">
                 </div>
             </div>
 
 
         </div>
 
-        <button id="changeStateBtn">Change State</button>
+        <!-- <button id="changeStateBtn">Change State</button> -->
 
     </div>
 
