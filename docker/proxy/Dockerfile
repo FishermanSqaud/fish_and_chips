@@ -11,13 +11,7 @@ RUN npm install
 
 COPY ./proxy/web /usr/src/web
 
-COPY ./.env /usr/src/
-
-RUN ls
-
-RUN ls /usr/src
-
-RUN cat /usr/src/.env
+COPY ./.env /usr/src/web/
 
 RUN npm run build
 
