@@ -35,8 +35,10 @@ exports.checkIfAuthDomain = async (req, res) => {
 
 		var conn = await db.getConn()
 
+		const url = new URL(uri)
+
 		const userParams = [
-			req.body.uri
+			url.hostname
 		]
 		
 		const result = await conn.sendQuery(
@@ -109,10 +111,11 @@ exports.registerAuthDomain = async (req, res) => {
 			return
 		}
 
-		const userParams = [
-			req.body.uri
-		]
+		const url = new URL(uri)
 
+		const userParams = [
+			url.hostname
+		]
 
 		// TO-DO :중복 생성 체크
 		
@@ -170,11 +173,14 @@ exports.updateAuthDomain = async (req, res) => {
 
 			return
 		}
+
 		
 		var conn = await db.getConn()
 
+		const url = new URL(uri)
+
 		const userParams = [
-			req.body.uri,
+			url.hostname,			
 			req.params.authDomainId 
 		]
 		
