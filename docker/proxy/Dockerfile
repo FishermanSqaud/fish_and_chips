@@ -5,15 +5,13 @@ WORKDIR /usr/src/web
 
 ENV PATH /usr/src/web/node_modules/.bin:$PATH
 
-ARG REACT_APP_BACKEND_URL 
-
-ENV REACT_APP_BACKEND_URL $REACT_APP_BACKEND_URL
-
 COPY ./proxy/web/package*.json /usr/src/web/
 
 RUN npm install
 
 COPY ./proxy/web /usr/src/web
+
+COPY ./.env /usr/src/.env
 
 RUN npm run build
 
