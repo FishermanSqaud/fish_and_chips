@@ -41,7 +41,6 @@ const requestEncryptCheck = async () => {
 
         // Temp Hack
         if (url.protocol == "https:"){
-            console.log("hey?")
             return true
         }
 
@@ -239,79 +238,7 @@ async function main() {
 main()
 
 
-
 // window.addEventListener("load", async () => {
-
-//     console.log("on load?")
-
-//     // ===== DETAILS ELEMENTS ======
-//     let encryptIconEl = document.getElementById('encryptIcon')
-//     let encryptTextEl = document.getElementById('encryptText')
-//     let reportIconEl = document.getElementById('reportIcon')
-//     let reportCntEl = document.getElementById('reportCnt')
-//     let reportTextEl = document.getElementById('reportText')
-//     let domainFoundIconEl = document.getElementById('domainFoundIcon')
-//     let domainFoundTextEl = document.getElementById('domainFoundText')
-//     // Overview
-//     let totalIcon = document.getElementById('totalIcon')
-//     let securityText = document.getElementById('securityText')
-//     let helperText = document.getElementById('helperText')
-
-
-
-//     let [isEncrypted, reportCnt, isDomainFound] = await requestSecurityCheck()
-
-//     const secureLevel = await evaluate(isEncrypted, reportCnt, isDomainFound)
-
-//     totalIcon.src = dummyIcons[secureLevel]
-//     securityText.innerText = securityTexts[secureLevel].securityMsg
-//     securityText.style.color = securityTexts[secureLevel].fontColor
-//     helperText.innerText = securityTexts[secureLevel].helperMsg
-
-//     if (secureLevel == securityLevel.SECURE){
-//         isEncrypted = true
-//     }
-
-//     console.log("총 결과 : ", [isEncrypted, reportCnt, isDomainFound])
-//     // changeState(dummyStateIdx)()
-
-//     if (encryptIconEl) {
-//         if (isEncrypted) {
-//             encryptIconEl.src = icons.enryption.fine
-//             encryptTextEl.innerText = detailTexts.encryption.fine
-//         } else {
-//             encryptIconEl.src = icons.enryption.none
-//             encryptTextEl.innerText = detailTexts.encryption.none
-//         }
-//     }
-
-//     if (reportCntEl) {
-//         reportCntEl.innerText = reportCnt
-
-//         if (reportCnt == 0) {
-//             reportIconEl.src = icons.report.none
-
-//         } else if (reportCnt <= reportThreshold) {
-//             reportIconEl.src = icons.report.few
-
-//         } else {
-//             reportIconEl.src = icons.report.many
-//         }
-//     }
-
-
-//     if (domainFoundIconEl) {
-
-//         if (isDomainFound) {
-//             domainFoundIconEl.src = icons.domain.found
-//             domainFoundTextEl.innerText = detailTexts.domain.found
-//         } else {
-//             domainFoundIconEl.src = icons.domain.notFound
-//             domainFoundTextEl.innerText = detailTexts.domain.notFound
-//         }
-//     }
-
-
 // })
 
 const evaluate = async (isEncrypted, reportCnt, isDomainFound) => {

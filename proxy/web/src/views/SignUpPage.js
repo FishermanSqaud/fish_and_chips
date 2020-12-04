@@ -47,8 +47,6 @@ const SignUp = inject("store")(
 
         const backendUrl = process.env.REACT_APP_BACKEND_URL
 
-        console.log("backend url", backendUrl)
-
         const requestBody = {
           email: email,
           name: name,
@@ -124,10 +122,7 @@ const SignUp = inject("store")(
             true
           )
 
-          console.log("not here?")
-
           props.history.push('/')
-          // redirect to home page
 
         } else {
 
