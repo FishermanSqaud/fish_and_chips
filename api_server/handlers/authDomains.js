@@ -35,7 +35,7 @@ exports.checkIfAuthDomain = async (req, res) => {
 
 		var conn = await db.getConn()
 
-		const url = new URL(uri)
+		const url = new URL(req.body.uri)
 
 		const userParams = [
 			url.hostname
@@ -111,7 +111,9 @@ exports.registerAuthDomain = async (req, res) => {
 			return
 		}
 
-		const url = new URL(uri)
+		console.log("등록 요청 - ", req.body.uri)
+
+		const url = new URL(req.body.uri)
 
 		const userParams = [
 			url.hostname
@@ -125,6 +127,7 @@ exports.registerAuthDomain = async (req, res) => {
 			userParams
 		)		
 		
+		console.log("등록 결과 - ", result.results)
 
 		if (isCreatedOk(result)){
 			
@@ -138,6 +141,8 @@ exports.registerAuthDomain = async (req, res) => {
 		}
 
 	} catch (e) {
+
+		console.log("등록 실패 - ", e)
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
@@ -177,7 +182,7 @@ exports.updateAuthDomain = async (req, res) => {
 		
 		var conn = await db.getConn()
 
-		const url = new URL(uri)
+		const url = new URL(req.body.uri)
 
 		const userParams = [
 			url.hostname,			
