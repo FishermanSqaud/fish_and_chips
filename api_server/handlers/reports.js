@@ -20,7 +20,11 @@ exports.getReportsOfDomain = async (req, res) => {
 
 			res.status(consts.STATUS_CODE.BAD_REQUEST)
 				.send("요청 도메인이 없습니다")
+
+			return
 		}
+
+		console.log("신고 내역 요청 들어옴 ", req.body.spam_domain)
 
 		var conn = await db.getConn()
 
@@ -35,6 +39,7 @@ exports.getReportsOfDomain = async (req, res) => {
 
 		const fetchedReports = result.results
 
+		console.log("신고 내역 응답 ", fetchedReports)
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
@@ -42,7 +47,9 @@ exports.getReportsOfDomain = async (req, res) => {
 		)
 
 		res.status(consts.STATUS_CODE.OK)
-			.send(JSON.stringify(fetchedReports))
+			.send(JSON.stringify({
+				reports : fetchedReports
+			}))
 
 
 	} catch (e) {

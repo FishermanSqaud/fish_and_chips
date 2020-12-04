@@ -53,10 +53,12 @@ const sendQuery = (conn) => (query, params) => {
         conn.query(queryInfo, (err, results, fields) => {
             if (err) {
                 err.status = this.queryError
+                conn.release()
                 rej(err)
                 return
             }
 
+            conn.release()
             res({
                 results: results,
                 fields: fields

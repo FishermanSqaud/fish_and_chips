@@ -22,11 +22,18 @@ const isUriSent = (req) => {
 	return (('uri' in req.body) && req.body.uri != null)
 }
 
+const isHttp = async (uri) => {
+	
+	const url = new URL(uri)
+	
+	return url.protocol == "http:"
+}
+
 exports.verify = async (req, res) => {
 
 	try {
 
-		if (!isUriSent(req)){
+		if (!isUriSent(req)) {
 
 			res.setHeader(
 				consts.HEADER.CONTENT_TYPE,
@@ -47,23 +54,34 @@ exports.verify = async (req, res) => {
 
 		const uri = req.body.uri
 
+		// Some Servers redirect HTTPS 443 port to HTTP 80 port
+		if (await isHttp(uri)) {
+
+			res.status(consts.STATUS_CODE.OK)
+				.send(JSON.stringify({
+					result: false
+				}))
+
+			return
+		}
+
 		const options = await cert.makeRequestOption(uri)
 
 		const requestToDoubtSite = https.request(
-			options, 
+			options,
 			async (responseFromDoubt) => {
 
 				const rawCertBuf = await cert.getCertificateBuf(
 					responseFromDoubt
 				)
 
-				if (rawCertBuf == null || rawCertBuf == undefined){
+				if (rawCertBuf == null || rawCertBuf == undefined) {
 
 					res.setHeader(
 						consts.HEADER.CONTENT_TYPE,
 						consts.HEADER.TEXT
 					)
-		
+
 					res.status(consts.STATUS_CODE.BAD_REQUEST)
 						.send("Unable to get certificate from URL")
 
@@ -84,7 +102,7 @@ exports.verify = async (req, res) => {
 
 					res.status(consts.STATUS_CODE.OK)
 						.send(JSON.stringify({
-							result : isVerified
+							result: isVerified
 						}))
 
 				} else {
@@ -92,16 +110,16 @@ exports.verify = async (req, res) => {
 					// bad response
 					res.status(consts.STATUS_CODE.OK)
 						.send(JSON.stringify({
-							result : false
+							result: false
 						}))
 				}
-		})
+			})
 
 		requestToDoubtSite.on('error', e => {
 
 			res.status(consts.STATUS_CODE.OK)
 				.send(JSON.stringify({
-					result : false
+					result: false
 				}))
 		})
 

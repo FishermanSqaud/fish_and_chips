@@ -26,7 +26,12 @@ exports.checkIfAuthDomain = async (req, res) => {
 
 			res.status(consts.STATUS_CODE.BAD_REQUEST)
 				.send("요청 도메인이 없습니다")
+			
+			return
 		}
+
+
+		console.log("기업 도메인 요청 ", req.body.uri)
 
 		var conn = await db.getConn()
 
@@ -38,6 +43,9 @@ exports.checkIfAuthDomain = async (req, res) => {
 			db.query.authDomain.getWithDomain,
 			userParams
 		)
+
+		console.log("기업 도메인 응답 결과 ", result.results)
+
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
