@@ -11,6 +11,8 @@ services:
         args :
             - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
             - GENERAGE_SOURCEMAP=false
+        env_file:
+            - ./.env
         expose:
             - "80"
         ports:
