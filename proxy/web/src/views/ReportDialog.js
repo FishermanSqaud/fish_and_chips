@@ -160,17 +160,8 @@ const CreateDialog = inject("store")(
 			handleClose()
 		}
 
-		const handleInput = (errorState, errorSetter, valueSetter, type) =>
+		const handleInput = (valueSetter, type) =>
 			(e) => {
-				if (e.target.value == '') {
-					errorSetter(true)
-					return
-				}
-
-				if (errorState) {
-					errorSetter(false)
-				}
-
 				valueSetter(type(e.target.value))
 			}
 
@@ -245,8 +236,6 @@ const CreateDialog = inject("store")(
 								label="신고 도메인"
 								value={reportDomain}
 								onChange={handleInput(
-									domainErr,
-									setDomainErr,
 									setReportDomain,
 									String
 								)}
@@ -260,8 +249,6 @@ const CreateDialog = inject("store")(
 								className={classes.textFieldElse}
 								label="제목"
 								onChange={handleInput(
-									inputTitleErr,
-									setInputTitleErr,
 									setInputTitle,
 									String
 								)}
@@ -279,8 +266,6 @@ const CreateDialog = inject("store")(
 								rows={4}
 								variant="outlined"
 								onChange={handleInput(
-									inputContentErr,
-									setInputContentErr,
 									setInputContent,
 									String
 								)}
