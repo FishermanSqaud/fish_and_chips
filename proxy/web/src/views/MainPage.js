@@ -42,6 +42,13 @@ const MainPage = inject("store")(
       )
     }
 
+    const handleOpenMyReport = () => {
+      props.store.set(
+        "isMyReportOpen",
+        true
+      )
+    }
+
     return (
       <>
         <div className={classes.clearFilter} filter-color="blue">
@@ -52,7 +59,7 @@ const MainPage = inject("store")(
           <div className={classes.container}>
 
             <div className={classes.brand}>
-              
+
               <img
                 alt="..."
                 className={classes.mrLogo}
@@ -64,7 +71,7 @@ const MainPage = inject("store")(
               <h4 className={classes.description}>
                 Fish and Chips
               </h4>
-              
+
               {props.store.isLoggedIn &&
 
                 <h4 className={classes.description}>
@@ -82,7 +89,22 @@ const MainPage = inject("store")(
                   variant="contained"
                   color="secondary">
                   신고하기
-            </Button>
+                </Button>
+              </div>
+
+              <div>
+                {props.store.isLoggedIn &&
+                  <Button
+                    style={{
+                      marginTop: 30,
+                      width: '16%'
+                    }}
+                    onClick={handleOpenMyReport}
+                    variant="contained"
+                    color="primary">
+                    신고내역
+                  </Button>
+                }
               </div>
 
               <div>

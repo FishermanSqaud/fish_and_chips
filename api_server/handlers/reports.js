@@ -1,5 +1,7 @@
 const db = require('../configs/db')
 const consts = require('../configs/constants')
+const auth = require('../configs/auth')
+
 require('dotenv').config()
 
 const isDomainSent = (req) => {
@@ -63,13 +65,80 @@ exports.getReportsOfDomain = async (req, res) => {
 
 const isReportInfoSent = (req) => {
 	return  (("spam_domain" in req.body) && req.body.spam_domain != null)
-		&& (("user_id" in req.body) && req.body.user_id != null)
+		// && (("user_id" in req.body) && req.body.user_id != null)
 		&& (("title" in req.body) && req.body.title != null)
 		&& (("content" in req.body) && req.body.content != null)
 }
 
 const isCreatedOk = (result) => {
 	return result.results.affectedRows == 1
+}
+
+
+// GET
+exports.getReports = async (req, res) => {
+
+	try {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		console.log("신고 내역 가져오기 요청 들어옴 ")
+
+		var conn = await db.getConn()
+
+		const userParams = [
+			tokenResult.userId
+		]
+		
+		const result = await conn.sendQuery(
+			db.query.report.get,
+			userParams
+		)
+
+		const fetchedReports = result.results
+
+		console.log("신고 내역 요청 응답 ", fetchedReports)
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.JSON
+		)
+
+		res.status(consts.STATUS_CODE.OK)
+			.send(JSON.stringify({
+				reports : fetchedReports
+			}))
+
+
+	} catch (e) {
+
+		console.log("error - ",e)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+		.send("서버 오류")
+	}
 }
 
 // For Admin User
@@ -82,6 +151,25 @@ exports.createReport = async (req, res) => {
 			consts.HEADER.TEXT
 		)
 
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
 		var conn = await db.getConn()
 
 		// body 검사하기
@@ -93,11 +181,14 @@ exports.createReport = async (req, res) => {
 			return
 		}
 
+		console.log("토큰 체크 결과", tokenResult)
+
 		// TO-DO : 로그인 토큰 확인
 
 		const userParams = [
 			req.body.spam_domain,
-			req.body.user_id,
+			// req.body.user_id,
+			tokenResult.userId,
 			req.body.title,
 			req.body.content
 		]
@@ -151,6 +242,26 @@ exports.updateReport = async (req, res) => {
 			consts.HEADER.TEXT
 		)
 
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+
 		if (!isReportUpdateInfoSent(req)){
 	
 			res.status(consts.STATUS_CODE.BAD_REQUEST)
@@ -158,6 +269,9 @@ exports.updateReport = async (req, res) => {
 
 			return
 		}
+
+		// TO-DO : 자신의 신고내역인지도 확인할 필요가 있다.
+		//
 		
 		var conn = await db.getConn()
 
@@ -206,6 +320,28 @@ const isDeletedSuccess = (result) => {
 exports.deleteReport = async (req, res) => {
 
 	try {
+
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		// TO-Do : 자신의 신고내역인지 확인할 필요가 있다
+
 
 		var conn = await db.getConn()
 

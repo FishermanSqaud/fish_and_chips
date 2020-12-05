@@ -63,7 +63,6 @@ const SignUp = inject("store")(
           return
         }
 
-        const backendUrl = process.env.REACT_APP_BACKEND_URL
 
         const requestBody = {
           email: email,
@@ -71,64 +70,11 @@ const SignUp = inject("store")(
           password: password,
         }
 
-        const response = await fetch(
-          `${backendUrl}/users`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestBody)
-          }
-        )
+        const response = await props.store.signUp(requestBody)
 
-        console.log("회원가입 결과", response)
+        if (response.ok){
 
-        if (response.ok) {
-
-          const loginResponse = await fetch(
-            `${backendUrl}/users/signIn`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify(requestBody)
-            }
-          )
-
-          if (loginResponse.ok) {
-
-            props.store.set(
-              "isLoggedIn",
-              true
-            )
-
-            const accessToken = response.headers.get(
-              "Authorization"
-            )
-
-            props.store.set(
-              "accessToken",
-              accessToken
-            )
-
-            const responseJson = await loginResponse.json()
-
-            props.store.set(
-              "userName",
-              responseJson.userName
-            )
-
-            props.store.set(
-              "userId",
-              responseJson.userId
-            )
-
-            localStorage.setItem("accessToken", accessToken)
-            localStorage.setItem("userName", responseJson.userName)
-            localStorage.setItem("userId", responseJson.userId)
-          }
+          await props.store.signIn(requestBody)
 
           props.store.set(
             "snackbarMsg",

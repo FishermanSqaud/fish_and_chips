@@ -123,11 +123,12 @@ exports.signIn = async (req, res) => {
 			db.query.user.getWithPwd,
 			userParams
 		)
-
+ 
 		if (isUserExist(result)) {
 
 			const payload = {
-				email: req.body.email
+				email: req.body.email,
+				userId : result.results[0].id
 			}
 
 			const token = await auth.publishJwt(payload)

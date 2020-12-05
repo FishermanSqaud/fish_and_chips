@@ -17,7 +17,7 @@ import { observer, inject } from "mobx-react";
 import { IconButton } from "@material-ui/core";
 
 
-const LocationsTable = inject("store")(
+const ReportsTable = inject("store")(
 	observer((props) => {
 		const classes = useStyles();
 
@@ -25,7 +25,7 @@ const LocationsTable = inject("store")(
 
 		const handleChangePage = (e, newPageNum) => {
 			props.store.set(
-				"locationTablePageNum",
+				"reportsTablePageNum",
 				newPageNum
 			)
 		};
@@ -37,18 +37,18 @@ const LocationsTable = inject("store")(
 			const newRowsPerPage = parseInt(e.target.value, 10)
 
 			props.store.set(
-				"locationRowsPerPage",
+				"reportsRowsPerPage",
 				newRowsPerPage
 			);
 		};
 
 		const handleOpenDetailModal = (key) => () => {
 			props.store.set(
-				"detailLocationKey",
+				"detaulReportKey",
 				key
 			)
 			props.store.set(
-				"isDetailDialogOpen",
+				"isReportDetailDialogOpen",
 				true
 			)
 		}
@@ -75,7 +75,7 @@ const LocationsTable = inject("store")(
 		const handleOpenDeleteDialog = (targetLocation) => () => {
 
 			props.store.set(
-				"deleteLocation",
+				"deleteReport",
 				targetLocation
 			)
 
@@ -119,8 +119,8 @@ const LocationsTable = inject("store")(
 								props.store.tableFilter,
 								props.store.tableSearch
 							),
-							props.store.locationTablePageNum,
-							props.store.locationRowsPerPage
+							props.store.reportsTablePageNum,
+							props.store.reportsRowsPerPage
 						)
 							.map((row, idx) => {
 
@@ -208,8 +208,8 @@ const LocationsTable = inject("store")(
 								props.store.tableFilter,
 								props.store.tableSearch,
 							).length}
-							rowsPerPage={props.store.locationRowsPerPage}
-							page={props.store.locationTablePageNum}
+							rowsPerPage={props.store.reportsRowsPerPage}
+							page={props.store.reportsTablePageNum}
 							SelectProps={{
 								inputProps: { 'aria-label': 'wassup' },
 								native: true,
@@ -225,7 +225,7 @@ const LocationsTable = inject("store")(
 		)
 	}))
 
-export default LocationsTable
+export default ReportsTable
 
 const DUMMY_ROW_KEY = ' '
 

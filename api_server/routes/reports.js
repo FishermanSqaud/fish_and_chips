@@ -20,6 +20,14 @@ var reportsHandler = require('../handlers/reports')
 //
 reportsRouter.post('/check', reportsHandler.getReportsOfDomain)
 
+// GET
+//
+// Response body : {
+//   reports : []   
+// }
+//
+reportsRouter.get('/', reportsHandler.getReports)
+
 // POST
 // Request body : 
 // {

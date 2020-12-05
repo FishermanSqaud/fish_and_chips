@@ -43,7 +43,8 @@ exports.checkToken = async (token) => {
         if (decoded) {
             return {
                 status: true,
-                email: decoded.email
+                email: decoded.email,
+                userId : decoded.userId
             }
 
         } else {
@@ -57,3 +58,9 @@ exports.checkToken = async (token) => {
     }
 }
 
+exports.isAccessTokenSent = (req) => {
+    var unsplittedToken = req.header(consts.HEADER.AUTH)
+    
+    return (unsplittedToken != null) 
+        && (unsplittedToken != undefined)
+}

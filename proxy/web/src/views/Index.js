@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Snackbars from './Snackbars'
 import ReportDialog from './ReportDialog'
 import CheckDialog from './CheckDialog'
+import MyReportDialog from "./MyReportDialog.js";
 
 
 const Index = inject("store")(
@@ -71,6 +72,9 @@ const Index = inject("store")(
 
           {props.store.isCheckDialogOpen &&
             <CheckDialog />}
+
+          {props.store.isMyReportOpen &&
+            <MyReportDialog />} 
         </div>
 
         <Snackbars></Snackbars>

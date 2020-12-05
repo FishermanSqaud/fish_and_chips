@@ -23,7 +23,7 @@ const DeleteDialog = inject("store")(
             try {
 
                 const backendUrl = process.env.REACT_APP_BACKEND_URL
-                const targetUrl = backendUrl + `/${props.store.deleteLocation.key}`
+                const targetUrl = backendUrl + `/${props.store.deleteReport.key}`
 
                 const response = await fetch(
                     targetUrl,
@@ -35,7 +35,7 @@ const DeleteDialog = inject("store")(
                 if (response.ok) {
                     props.store.set(
                         "snackbarMsg",
-                        `${props.store.deleteLocation.message} 삭제 성공`
+                        `${props.store.deleteReport.message} 삭제 성공`
                     )
 
                     props.store.set(
@@ -43,7 +43,7 @@ const DeleteDialog = inject("store")(
                         true
                     )
 
-                    const idx = props.store.allLocations.indexOf(props.store.deleteLocation)
+                    const idx = props.store.allLocations.indexOf(props.store.deleteReport)
 
                     if (idx > -1){
                         props.store.allLocations.splice(idx, 1)
@@ -52,7 +52,7 @@ const DeleteDialog = inject("store")(
                 } else {
                     props.store.set(
                         "snackbarMsg",
-                        `${props.store.deleteLocation.message} 삭제 실패`
+                        `${props.store.deleteReport.message} 삭제 실패`
                     )
 
                     props.store.set(
@@ -65,7 +65,7 @@ const DeleteDialog = inject("store")(
 
                 props.store.set(
                     "snackbarMsg",
-                    `${props.store.deleteLocation.message} 삭제 실패`
+                    `${props.store.deleteReport.message} 삭제 실패`
                 )
 
                 props.store.set(
@@ -94,7 +94,7 @@ const DeleteDialog = inject("store")(
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                {`${props.store.deleteLocation.message}를 정말로 삭제하시겠습니까?`}
+                                {`${props.store.deleteReport.message}를 정말로 삭제하시겠습니까?`}
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>

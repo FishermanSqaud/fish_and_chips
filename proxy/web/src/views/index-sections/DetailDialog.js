@@ -13,7 +13,7 @@ const DetailDialog = inject("store")(
 	observer((props) => {
 
 		let location = props.store.allLocations.find(eachLocation => {
-			return eachLocation.key == props.store.detailLocationKey
+			return eachLocation.key == props.store.detaulReportKey
 		})
 
 		const [inputMsg, setInputMsg] = useState(location.message)
@@ -84,7 +84,7 @@ const DetailDialog = inject("store")(
 
 			try {
 				const targetBaseUrl = process.env.REACT_APP_BACKEND_URL
-				const targetUrl = targetBaseUrl + `/${props.store.detailLocationKey}`
+				const targetUrl = targetBaseUrl + `/${props.store.detaulReportKey}`
 
 				if (!isOkToRequestUpdate()) {
 					props.store.set(
@@ -154,7 +154,7 @@ const DetailDialog = inject("store")(
 			}
 
 			props.store.set(
-				"isDetailDialogOpen",
+				"isReportDetailDialogOpen",
 				false
 			)
 		}
@@ -175,7 +175,7 @@ const DetailDialog = inject("store")(
 
 		const handleClose = () => {
 			props.store.set(
-				"isDetailDialogOpen",
+				"isReportDetailDialogOpen",
 				false
 			)
 		}
@@ -184,7 +184,7 @@ const DetailDialog = inject("store")(
 			<Dialog
 				aria-labelledby="simple-modal-title"
 				aria-describedby="simple-modal-description"
-				open={props.store.isDetailDialogOpen}
+				open={props.store.isReportDetailDialogOpen}
 				onClose={handleClose}
 				className={classes.dialog}
 				classes={{ paperScrollPaper: classes.dialog }}

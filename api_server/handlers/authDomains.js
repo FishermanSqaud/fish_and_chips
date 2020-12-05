@@ -100,6 +100,28 @@ exports.registerAuthDomain = async (req, res) => {
 			consts.HEADER.TEXT
 		)
 
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		// TO-DO : 관리자인지 확인
+
+
 		var conn = await db.getConn()
 
 		// body 검사하기
@@ -171,6 +193,28 @@ exports.updateAuthDomain = async (req, res) => {
 			consts.HEADER.TEXT
 		)
 
+
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		// TO-DO : 관리자인지 확인
+
 		if (!isAuthDomainUpdateInfoSent(req)){
 	
 			res.status(consts.STATUS_CODE.BAD_REQUEST)
@@ -229,6 +273,28 @@ const isDeletedSuccess = (result) => {
 exports.deleteReport = async (req, res) => {
 
 	try {
+
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		// TO-DO : 관리자인지 확인
+
 
 		var conn = await db.getConn()
 

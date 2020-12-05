@@ -21,7 +21,7 @@ const CreateDialog = inject("store")(
 	observer((props) => {
 		const [inputType, setInputType] = useState(PAYMENT)
 
-		const [reportDomain, setReportDomain] = useState(props.store.reportDomain)		
+		const [reportDomain, setReportDomain] = useState(props.store.reportDomain)
 		const [inputTitle, setInputTitle] = useState("")
 		const [inputContent, setInputContent] = useState("")
 
@@ -37,17 +37,17 @@ const CreateDialog = inject("store")(
 			}
 
 			const enterSubmit = (e) => {
-				if (e.keyCode == ENTER_KEY_CODE){
-				  const submitBtn = document.getElementById("submit")
-				  submitBtn.click()
+				if (e.keyCode == ENTER_KEY_CODE) {
+					const submitBtn = document.getElementById("submit")
+					submitBtn.click()
 				}
-			  }
-		
-			  window.addEventListener('keyup', enterSubmit)
-		
-			  return function cleanup() {
+			}
+
+			window.addEventListener('keyup', enterSubmit)
+
+			return function cleanup() {
 				window.removeEventListener('keyup', enterSubmit)
-			  }
+			}
 		}, [])
 
 		const classes = useStyles()
@@ -55,10 +55,10 @@ const CreateDialog = inject("store")(
 		const makeRequestJsonBody = (domain, title, content) => {
 
 			return {
-				spam_domain : domain,
-				user_id : props.store.userId,
-				title : title,
-				content : content
+				spam_domain: domain,
+				// user_id: props.store.userId,
+				title: title,
+				content: content
 			}
 		}
 
@@ -119,7 +119,8 @@ const CreateDialog = inject("store")(
 					{
 						method: "POST",
 						headers: {
-							"Content-Type": "application/json"
+							"Content-Type": "application/json",
+							"Authorization" : `Bearer ${props.store.accessToken}`
 						},
 						body: JSON.stringify(requestBody)
 					},
@@ -185,7 +186,7 @@ const CreateDialog = inject("store")(
 				false
 			)
 		}
-		
+
 		const handleInputTypeChange = (e) => {
 			setInputType(Number(e.target.value))
 		};
@@ -215,8 +216,8 @@ const CreateDialog = inject("store")(
 
 					<div>
 						<div>
-							<FormControl 
-								classes={{root : classes.select}} 
+							<FormControl
+								classes={{ root: classes.select }}
 								className={classes.formControl}>
 
 								<InputLabel htmlFor="age-native-simple">
@@ -273,7 +274,7 @@ const CreateDialog = inject("store")(
 						<div>
 							<TextField
 								className={classes.textArea}
-								classes={{ root : classes.textAreaRoot}}
+								classes={{ root: classes.textAreaRoot }}
 								id="outlined-multiline-static"
 								label="내용"
 								multiline
@@ -339,7 +340,7 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "center",
 	},
 	select: {
-		width : '90%'
+		width: '90%'
 	},
 	button: {
 		// marginBottom: theme.spacing(1),
@@ -388,12 +389,12 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		width: '80%'
 	},
-	textArea : {
-		marginTop : 27,
-		width : '90%'
+	textArea: {
+		marginTop: 27,
+		width: '90%'
 	},
-	textAreaRoot : {
-		width : '90%'
+	textAreaRoot: {
+		width: '90%'
 	}
 }));
 
