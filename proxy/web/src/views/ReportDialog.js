@@ -15,6 +15,8 @@ const PAYMENT = 0
 const PERSONAL_INFO = 1
 const ETC = 2
 
+const ENTER_KEY_CODE = 13
+
 const CreateDialog = inject("store")(
 	observer((props) => {
 		const [inputType, setInputType] = useState(PAYMENT)
@@ -27,13 +29,25 @@ const CreateDialog = inject("store")(
 		const [inputTitleErr, setInputTitleErr] = useState(false)
 		const [inputContentErr, setInputContentErr] = useState(false)
 
-
 		useEffect(() => {
 			const domain = localStorage.getItem("spam_domain")
 
 			if (domain) {
 				setReportDomain(domain)
 			}
+
+			const enterSubmit = (e) => {
+				if (e.keyCode == ENTER_KEY_CODE){
+				  const submitBtn = document.getElementById("submit")
+				  submitBtn.click()
+				}
+			  }
+		
+			  window.addEventListener('keyup', enterSubmit)
+		
+			  return function cleanup() {
+				window.removeEventListener('keyup', enterSubmit)
+			  }
 		}, [])
 
 		const classes = useStyles()
@@ -283,6 +297,7 @@ const CreateDialog = inject("store")(
         			</Button>
 
 					<Button
+						id="submit"
 						className={classes.button}
 						onClick={handleReport}>
 						신고

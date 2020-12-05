@@ -16,9 +16,15 @@ import backgroundImage from '../assets/img/squad_1.jpg'
 import { observer, inject } from "mobx-react";
 import Snackbars from 'views/Snackbars'
 
+const ENTER_KEY_CODE = 13
 
 const LoginPage = inject("store")(
     observer((props) => {
+
+        const classes = useStyles();
+
+        const [email, setEmail] = useState("")
+        const [password, setPassword] = useState("")
 
         useEffect(() => {
 
@@ -27,12 +33,21 @@ const LoginPage = inject("store")(
                 return
             }
 
+            const enterSubmit = (e) => {
+                if (e.keyCode == ENTER_KEY_CODE) {
+                    const submitBtn = document.getElementById("submit")
+                    submitBtn.click()
+                }
+            }
+
+            window.addEventListener('keyup', enterSubmit)
+
+            return function cleanup() {
+                window.removeEventListener('keyup', enterSubmit)
+            }
+
         }, [])
 
-        const classes = useStyles();
-
-        const [email, setEmail] = useState("")
-        const [password, setPassword] = useState("")
 
         const handleEmailInput = (e) => {
             setEmail(e.target.value)
@@ -211,6 +226,7 @@ const LoginPage = inject("store")(
                                 />
 
                                 <Button
+                                    id="submit"
                                     fullWidth
                                     variant="contained"
                                     color="primary"
@@ -222,9 +238,9 @@ const LoginPage = inject("store")(
 
                                 <Grid container>
                                     <Grid item xs>
-                                        <Link 
+                                        <Link
                                             onClick={handleNotSupported}
-                                            href="#" 
+                                            href="#"
                                             variant="body2">
                                             비밀번호 찾기?
                                         </Link>

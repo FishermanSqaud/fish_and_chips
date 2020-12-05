@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,12 +8,13 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { observer, inject } from "mobx-react";
 import Snackbars from 'views/Snackbars'
+
+const ENTER_KEY_CODE = 13
 
 const SignUp = inject("store")(
   observer((props) => {
@@ -23,6 +24,23 @@ const SignUp = inject("store")(
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
+
+    useEffect(()=>{
+
+      const enterSubmit = (e) => {
+        if (e.keyCode == ENTER_KEY_CODE){
+          const submitBtn = document.getElementById("submit")
+          submitBtn.click()
+        }
+      }
+
+      window.addEventListener('keyup', enterSubmit)
+
+      return function cleanup() {
+        window.removeEventListener('keyup', enterSubmit)
+      }
+
+    },[])
 
     const isRequiredFilled = (email, name, password) => {
       return (email != "") && (name != "") && (password != "")
@@ -247,6 +265,7 @@ const SignUp = inject("store")(
               </Grid>
 
               <Button
+                id="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
