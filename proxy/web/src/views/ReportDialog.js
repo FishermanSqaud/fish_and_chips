@@ -21,13 +21,11 @@ const CreateDialog = inject("store")(
 	observer((props) => {
 		const [inputType, setInputType] = useState(PAYMENT)
 
-		const [reportDomain, setReportDomain] = useState(props.store.reportDomain)
+		const [reportDomain, setReportDomain] = useState(
+			props.store.reportDomain ? props.store.reportDomain : ""
+		)
 		const [inputTitle, setInputTitle] = useState("")
 		const [inputContent, setInputContent] = useState("")
-
-		const [domainErr, setDomainErr] = useState(false)
-		const [inputTitleErr, setInputTitleErr] = useState(false)
-		const [inputContentErr, setInputContentErr] = useState(false)
 
 		useEffect(() => {
 			const domain = localStorage.getItem("spam_domain")
@@ -254,7 +252,6 @@ const CreateDialog = inject("store")(
 									setReportDomain,
 									String
 								)}
-								error={domainErr}
 							/>
 
 						</div>
@@ -267,7 +264,6 @@ const CreateDialog = inject("store")(
 									setInputTitle,
 									String
 								)}
-								error={inputTitleErr}
 							/>
 						</div>
 
@@ -284,7 +280,6 @@ const CreateDialog = inject("store")(
 									setInputContent,
 									String
 								)}
-								error={inputContentErr}
 							/>
 						</div>
 					</div>

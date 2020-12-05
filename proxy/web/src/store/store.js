@@ -16,15 +16,17 @@ class Store {
         }
 
         this.userName = localStorage.getItem("userName")
-        // this.userId = localStorage.getItem("userId")
+        
+        this.myReports = []
 
         this.isReportDialogOpen = false
         this.isCheckDialogOpen = false
         this.isMyReportOpen = false
+        this.isDeleteDialogOpen = false
 
         this.reportsRowsPerPage = 10
         this.reportsTablePageNum = 0
-        this.detaulReportKey = null
+        this.detailReportId = null
         this.isReportDetailDialogOpen = false
         this.tableFilter = this.FILTER_ALL
         this.tableSearch = ""
@@ -34,6 +36,9 @@ class Store {
         this.snackbarWarningOpen = false
         this.snackbarErrorOpen = false
         this.snackbarMsg = ""
+
+
+        this.backendUrl = process.env.REACT_APP_BACKEND_URL
     }
 
     set = (field, value) => {
@@ -42,10 +47,8 @@ class Store {
 
     signUp = async (body) => {
 
-        const backendUrl = process.env.REACT_APP_BACKEND_URL
-
         const response = await fetch(
-            `${backendUrl}/users`,
+            `${this.backendUrl}/users`,
             {
               method: "POST",
               headers: {
@@ -58,12 +61,47 @@ class Store {
         return response
     }
 
-    signIn = async (body) => {
+    getMyReports = async (accessToken) => {
 
-        const backendUrl = process.env.REACT_APP_BACKEND_URL
+        var headers = {
+            "Content-Type": "application/json",
+        }
+
+        if (accessToken == undefined){
+            headers["Authorization"] =`Bearer ${this.accessToken}`
+        } else {
+            headers["Authorization"] =`Bearer ${accessToken}`
+        }
 
         const response = await fetch(
-            `${backendUrl}/users/signIn`,
+            `${this.backendUrl}/reports`,
+            {
+              method: "GET",
+              headers: headers
+            }
+          )
+
+        if (response.ok){
+
+            const responseJson = await response.json()
+
+            this.set(
+                "myReports",
+                responseJson.reports
+            )
+
+            return true
+
+        } else {
+            return false
+        }
+    }
+
+    signIn = async (body) => {
+
+
+        const response = await fetch(
+            `${this.backendUrl}/users/signIn`,
             {
               method: "POST",
               headers: {
@@ -118,8 +156,10 @@ decorate(Store, {
     userName : observable,
     isReportDialogOpen: observable,
     isCheckDialogOpen : observable,
-    // userId : observable,
+    isDeleteDialogOpen : observable,
     isMyReportOpen : observable,
+    myReports : observable,
+    getMyReports : action,
 
     snackbarInfoOpen: observable,
     snackbarWarningOpen: observable,

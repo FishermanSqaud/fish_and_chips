@@ -12,79 +12,23 @@ import TextField from "@material-ui/core/TextField"
 const DetailDialog = inject("store")(
 	observer((props) => {
 
-		let location = props.store.allLocations.find(eachLocation => {
-			return eachLocation.key == props.store.detaulReportKey
+		let report = props.store.myReports.find(rep => {
+			return rep.id == props.store.detailReportId
 		})
 
-		const [inputMsg, setInputMsg] = useState(location.message)
-		const [inputLatitude, setInputLatitude] = useState(location.latitude)
-		const [inputAltitude, setInputAltitude] = useState(location.altitude)
-		const [inputLongitude, setInputLongitude] = useState(location.longitude)
-		const [inputMsgErr, setInputMsgErr] = useState(false)
-		const [inputLatErr, setInputLatErr] = useState(false)
-		const [inputAltErr, setInputAltErr] = useState(false)
-		const [inputLongErr, setInputLongErr] = useState(false)
+		const [inputTitle, setInputTitle] = useState(report.title)
+		const [inputContent, setInputContent] = useState(report.content)
 
 		const classes = useStyles()
 
-		const makeRequestJsonBody = async () => {
-
-			let body = {}
-
-			if (inputMsg != "") {
-				body.message = inputMsg
-			}
-			if (inputLatitude != null) {
-				body.latitude = inputLatitude
-			}
-			if (inputLongitude != null) {
-				body.longitude = inputLongitude
-			}
-			if (inputAltitude != null) {
-				body.altitude = inputAltitude
-			}
-
-			return body
-		}
-
 		const isOkToRequestUpdate = () => {
-			if (inputMsgErr) {
-				props.store.set(
-					"snackbarMsg",
-					"메세지가 입력되지 않았습니다."
-				)
-				return false
-			}
-			if (inputLatErr) {
-				props.store.set(
-					"snackbarMsg",
-					"위도가 입력되지 않았습니다."
-				)
-				return false
-			}
-			if (inputLongErr) {
-				props.store.set(
-					"snackbarMsg",
-					"경도가 입력되지 않았습니다."
-				)
-				return false
-			}
-			if (inputAltErr) {
-				props.store.set(
-					"snackbarMsg",
-					"고도가 입력되지 않았습니다."
-				)
-				return false
-			}
 
-			return true
+			return (inputTitle != "") && (inputContent != "")
 		}
 
-		const handleUpdateLocation = async () => {
+		const handleUpdateReport = async () => {
 
 			try {
-				const targetBaseUrl = process.env.REACT_APP_BACKEND_URL
-				const targetUrl = targetBaseUrl + `/${props.store.detaulReportKey}`
 
 				if (!isOkToRequestUpdate()) {
 					props.store.set(
@@ -94,19 +38,18 @@ const DetailDialog = inject("store")(
 					return
 				}
 
-				const requestBody = await makeRequestJsonBody(
-					inputMsg,
-					inputLatitude,
-					inputAltitude,
-					inputLongitude,
-				)
+				const requestBody = {
+					title : inputTitle,
+					content : inputContent
+				}
 
 				const response = await fetch(
-					targetUrl,
+					`${props.store.backendUrl}/reports/${report.id}`,
 					{
-						method: "PUT",
+						method: "PATCH",
 						headers: {
-							"Content-Type": "application/json"
+							"Content-Type": "application/json",
+							"Authorization" : `Bearer ${props.store.accessToken}`
 						},
 						body: JSON.stringify(requestBody)
 					},
@@ -114,11 +57,11 @@ const DetailDialog = inject("store")(
 
 				if (response.ok) {
 
-					props.store.getAllLocationData()
+					props.store.getMyReports()
 
 					props.store.set(
 						"snackbarMsg",
-						"위치 데이터 수정 완료"
+						"신고 내역 수정 완료"
 					)
 
 					props.store.set(
@@ -130,7 +73,7 @@ const DetailDialog = inject("store")(
 
 					props.store.set(
 						"snackbarMsg",
-						"위치 데이터 수정 실패"
+						"신고 내역 수정 실패"
 					)
 
 					props.store.set(
@@ -144,7 +87,7 @@ const DetailDialog = inject("store")(
 
 				props.store.set(
 					"snackbarMsg",
-					"위치 데이터 수정 실패"
+					"신고 내역 수정 실패"
 				)
 
 				props.store.set(
@@ -159,19 +102,9 @@ const DetailDialog = inject("store")(
 			)
 		}
 
-		const handleInput = (errorState, errorSetter, valueSetter, type) =>
-			(e) => {
-				if (e.target.value == '') {
-					errorSetter(true)
-					return
-				}
-
-				if (errorState) {
-					errorSetter(false)
-				}
-
-				valueSetter(type(e.target.value))
-			}
+		const handleInput = (valueSetter, type) => (e) => {
+			valueSetter(type(e.target.value))
+		}
 
 		const handleClose = () => {
 			props.store.set(
@@ -192,10 +125,12 @@ const DetailDialog = inject("store")(
 				<div
 					className={classes.dialogTitle}>
 					<div className={classes.newsTitle}>
-						{`상세보기`}
+						{`신고내역 상세보기`}
 					</div>
 					<div className={classes.newsTime}>
-						{showCreatedTime(new Date(location.createdTime))}
+						{`신고 시각 : 
+							${showCreatedTime(new Date(report.created_time))}
+						`}
 					</div>
 				</div>
 
@@ -204,82 +139,46 @@ const DetailDialog = inject("store")(
 					dividers>
 
 					<div>
+
+						<div>
+							<TextField
+								disabled
+								className={classes.textFieldTop}
+								id="standard-required"
+								label="신고 도메인"
+								defaultValue={report.spam_domain}
+							/>
+
+						</div>
+
 						<div>
 							<TextField
 								required
-								className={classes.textFieldTop}
+								className={classes.textFieldElse}
 								id="standard-required"
-								label="메세지"
-								defaultValue={location.message}
+								label="제목"
+								defaultValue={report.title}
 								onChange={handleInput(
-									inputMsgErr,
-									setInputMsgErr,
-									setInputMsg,
+									setInputTitle,
 									String
 								)}
-								error={inputMsgErr}
 							/>
 
 						</div>
 						<div>
 							<TextField
+								required
 								id="standard-number"
 								className={classes.textFieldElse}
-								label="위도"
-								type="number"
-								defaultValue={location.latitude}
+								label="본문"
+								defaultValue={report.content}
 								onChange={handleInput(
-									inputLatErr,
-									setInputLatErr,
-									setInputLatitude,
-									Number
+									setInputContent,
+									String
 								)}
-								error={inputLatErr}
-								InputLabelProps={{
-									shrink: true,
-								}}
 							/>
 						</div>
 
-						<div>
-							<TextField
-								id="standard-number"
-								className={classes.textFieldElse}
-								label="경도"
-								type="number"
-								defaultValue={location.longitude}
-								onChange={handleInput(
-									inputLongErr,
-									setInputLongErr,
-									setInputLongitude,
-									Number
-								)}
-								error={inputLongErr}
-								InputLabelProps={{
-									shrink: true,
-								}}
-							/>
-						</div>
-
-						<div>
-							<TextField
-								id="standard-number"
-								className={classes.textFieldElse}
-								label="고도"
-								type="number"
-								defaultValue={location.altitude}
-								onChange={handleInput(
-									inputAltErr,
-									setInputAltErr,
-									setInputAltitude,
-									Number
-								)}
-								error={inputAltErr}
-								InputLabelProps={{
-									shrink: true,
-								}}
-							/>
-						</div>
 					</div>
 				</DialogContent>
 
@@ -292,7 +191,7 @@ const DetailDialog = inject("store")(
 
 					<Button
 						className={classes.button}
-						onClick={handleUpdateLocation}>
+						onClick={handleUpdateReport}>
 						수정
         			</Button>
 				</DialogActions>

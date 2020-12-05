@@ -145,7 +145,7 @@ const LocationsSection = inject("store")(
 
         <DeleteDialog></DeleteDialog>
 
-        {props.store.isReportDetailDialogOpen &&
+        {props.store.isDetailDialogOpen &&
           <DetailDialog />
         }
         {props.store.isCreateDialogOpen &&
