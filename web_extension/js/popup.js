@@ -16,6 +16,8 @@ let totalIcon = document.getElementById('totalIcon')
 let securityText = document.getElementById('securityText')
 let helperText = document.getElementById('helperText')
 
+const SERVER_URL = "http://3.35.127.235"
+
 
 
 
@@ -45,7 +47,7 @@ const requestEncryptCheck = async () => {
         }
 
         const response = await fetch(
-            'http://localhost/api/v1/verify',
+            `${SERVER_URL}/api/v1/verify`,
             {
                 method: "POST",
                 headers: {
@@ -82,7 +84,7 @@ const requestReportCnt = async () => {
         const curDomain = localStorage.getItem("report_domain")
 
         const response = await fetch(
-            'http://localhost/api/v1/reports/check',
+            `${SERVER_URL}/api/v1/reports/check`,
             {
                 method: "POST",
                 headers: {
@@ -119,7 +121,7 @@ const requestDomainCheck = async () => {
         const curDomain = localStorage.getItem("report_domain")
 
         const response = await fetch(
-            'http://localhost/api/v1/auth_domains/check',
+            `${SERVER_URL}/api/v1/auth_domains/check`,
             {
                 method: "POST",
                 headers: {
@@ -315,7 +317,7 @@ if (reportBtn) {
     reportBtn.onclick = () => {
 
         const curDomain = localStorage.getItem("report_domain")
-        window.open(`http://localhost?report=${curDomain}`)
+        window.open(`${SERVER_URL}?report=${curDomain}`)
     }
 }
 
