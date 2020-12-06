@@ -308,8 +308,6 @@ class Store {
       }
     )
 
-    console.log("wtf?", response)
-
     if (response.ok) {
 
       this.set(

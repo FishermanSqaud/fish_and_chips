@@ -124,8 +124,6 @@ const ReportDialog = inject("store")(
 					},
 				)
 
-				console.log("신고 결과 ", response)
-
 				if (response.ok) {
 
 					props.store.getMyReports()
