@@ -143,12 +143,14 @@ const Dashboard = inject("store")(
                   <Accessibility />
                 </CardIcon>
                 <p className={classes.cardCategory}>총 사용자</p>
-                <h3 className={classes.cardTitle}>+1</h3>
+                <h3 className={classes.cardTitle}>
+                  {props.store.users.length}
+                </h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
                   <Update />
-                  업데이트 예정
+                  {`최신 : ${new Date().toLocaleDateString()}`}
               </div>
               </CardFooter>
             </Card>
@@ -352,7 +354,7 @@ const Dashboard = inject("store")(
         user.email,
         user.reportCnt
       ]
-    })
+    }).slice(0, 8)
 
   }
 
