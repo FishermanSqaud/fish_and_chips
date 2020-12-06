@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { observer, inject } from "mobx-react";
 import Snackbars from 'views/Snackbars'
+import { useHistory } from "react-router-dom";
 
 const ENTER_KEY_CODE = 13
 
@@ -20,12 +21,24 @@ const SignUp = inject("store")(
   observer((props) => {
 
     const classes = useStyles();
+    const history = useHistory()
 
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
 
     useEffect(()=>{
+
+      if(props.store.isLoggedIn){
+
+				if (props.store.isAdmin){
+					history.push('/admin')
+					return
+				}
+        
+        history.push('/')
+        return
+      }
 
       const enterSubmit = (e) => {
         if (e.keyCode == ENTER_KEY_CODE){
@@ -86,7 +99,7 @@ const SignUp = inject("store")(
             true
           )
 
-          props.history.push('/')
+          history.push('/')
 
         } else {
 
@@ -129,6 +142,8 @@ const SignUp = inject("store")(
           true
         )
       }
+
+      history.push('/')
     }
 
     const handleEmailInput = (e) => {

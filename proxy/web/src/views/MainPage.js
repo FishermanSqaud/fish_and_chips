@@ -139,7 +139,8 @@ const MainPage = inject("store")(
               </div>
 
 
-              {props.store.isAdmin &&
+              {props.store.isAdmin ?
+
                 <Link to={'/admin'}>
                   <Button
                     style={{
@@ -150,7 +151,11 @@ const MainPage = inject("store")(
                     color="primary">
                     관리자 페이지
                 </Button>
-                </Link>}
+                </Link>
+                :
+                null
+              }
+              
             </div>
 
 

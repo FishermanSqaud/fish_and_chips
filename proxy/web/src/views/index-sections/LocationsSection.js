@@ -3,8 +3,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import LocationsTable from './LocationsTable'
 import { observer, inject } from "mobx-react";
 import { makeStyles } from "@material-ui/styles";
-import DetailDialog from './DetailDialog'
-import DeleteDialog from './DeleteDialog'
+import DetailDialog from '../DetailDialog'
+import DeleteDialog from '../DeleteDialog'
 import { IconButton, Card } from "@material-ui/core";
 import LocationFilterView from './LocationFilterView'
 import TextField from '@material-ui/core/TextField'

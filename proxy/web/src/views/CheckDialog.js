@@ -6,11 +6,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { useHistory } from "react-router-dom";
+
 
 const ENTER_KEY_CODE = 13
 
 const CheckDialog = inject("store")(
 	observer((props) => {
+
+		const history = useHistory()
 
 		useEffect(() => {
 
@@ -38,7 +42,6 @@ const CheckDialog = inject("store")(
 
 		const handleConfirm = async () => {
 
-
 			props.store.set(
 				"isLoggedIn",
 				false
@@ -54,14 +57,13 @@ const CheckDialog = inject("store")(
 				null
 			)
 
-			// props.store.set(
-			// 	"userId",
-			// 	null
-			// )
+			props.store.set(
+				"isAdmin",
+				false
+			)
 
 			localStorage.removeItem("accessToken")
 			localStorage.removeItem("userName")
-			// localStorage.removeItem("userId")
 
 			props.store.set(
 				"snackbarMsg",
@@ -74,6 +76,8 @@ const CheckDialog = inject("store")(
 			)
 
 			handleClose()
+
+			history.push('/')
 		}
 
 		return (

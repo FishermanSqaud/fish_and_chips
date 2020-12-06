@@ -126,14 +126,16 @@ exports.signIn = async (req, res) => {
  
 		if (isUserExist(result)) {
 
+			const user = result.results[0]
+
 			const payload = {
 				email: req.body.email,
-				userId : result.results[0].id
+				userId : user.id,
+				isAdmin : user.is_admin
 			}
 
 			const token = await auth.publishJwt(payload)
 
-			const user = result.results[0]
 
 			res.setHeader(
 				consts.HEADER.CONTENT_TYPE,
@@ -144,8 +146,7 @@ exports.signIn = async (req, res) => {
 
 			res.status(consts.STATUS_CODE.OK)
 				.send(JSON.stringify({
-					userName: user.name,
-					userId : user.id
+					userName: user.name
 				}))
 
 			console.log("로그인 성공", user)

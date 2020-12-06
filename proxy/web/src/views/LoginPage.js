@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage from '../assets/img/squad_1.jpg'
 import { observer, inject } from "mobx-react";
 import Snackbars from 'views/Snackbars'
+import { useHistory } from "react-router-dom";
 
 const ENTER_KEY_CODE = 13
 
@@ -22,6 +23,7 @@ const LoginPage = inject("store")(
 	observer((props) => {
 
 		const classes = useStyles();
+		const history = useHistory();
 
 		const [email, setEmail] = useState("")
 		const [password, setPassword] = useState("")
@@ -29,7 +31,12 @@ const LoginPage = inject("store")(
 		useEffect(() => {
 
 			if (props.store.isLoggedIn) {
-				props.history.push('/')
+				if (props.store.isAdmin){
+					history.push('/admin')
+					return
+				}
+				
+				history.push('/')
 				return
 			}
 
@@ -85,7 +92,6 @@ const LoginPage = inject("store")(
 				
 				if (isLoggedIn){
 
-
 					props.store.set(
 						"snackbarMsg",
 						"로그인 성공!"
@@ -96,7 +102,14 @@ const LoginPage = inject("store")(
 						true
 					)
 
-					props.history.push('/')
+					if (props.store.isAdmin){
+						history.push('/admin')
+
+					}else {
+
+						history.push('/')
+					}
+
 
 				} else {
 
