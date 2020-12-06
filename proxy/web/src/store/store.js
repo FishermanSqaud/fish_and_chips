@@ -11,6 +11,8 @@ class Store {
     this.isLoggedIn = false
     this.isAdmin = false
 
+    this.loadingMyReport = false
+
     this.accessToken = localStorage.getItem("accessToken")
     if (this.accessToken != null || this.accessToken != undefined) {
       this.isLoggedIn = true
@@ -81,6 +83,11 @@ class Store {
       headers["Authorization"] = `Bearer ${accessToken}`
     }
 
+    this.set(
+      "loadingMyReport",
+      true
+    )
+
     const response = await fetch(
       `${this.backendUrl}/reports`,
       {
@@ -98,6 +105,11 @@ class Store {
       this.set(
         "myReports",
         responseJson.reports
+      )
+
+      this.set(
+        "loadingMyReport",
+        false
       )
 
       return true
@@ -198,6 +210,8 @@ decorate(Store, {
   isDeleteDialogOpen: observable,
   isMyReportOpen: observable,
   myReports: observable,
+  loadingMyReport :observable,
+  
   getMyReports: action,
 
   snackbarInfoOpen: observable,
