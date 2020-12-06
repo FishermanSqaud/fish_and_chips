@@ -128,6 +128,8 @@ const ReportDialog = inject("store")(
 
 				if (response.ok) {
 
+					props.store.getMyReports()
+
 					const accessToken = response.headers.get(
 						"Authorization"
 					)
