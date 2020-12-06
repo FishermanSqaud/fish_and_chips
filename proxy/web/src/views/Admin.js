@@ -65,7 +65,7 @@ const Admin = inject("store")(
       setInterval(() => {
         props.store.getMyReports()
         props.store.getUsers()
-      }, 1000 * 10)
+      }, 1000 * 30)
 
     }, [])
 

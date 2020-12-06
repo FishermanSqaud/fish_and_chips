@@ -36,13 +36,10 @@ const Index = inject("store")(
       if (props.store.isAdmin){
         history.push('/admin')
         return
-        
+
       } else {
 
-        setInterval(()=>{
-          props.store.getMyReports()
-        }, 1000 * 10)
-
+        props.store.getMyReports()
       }
 
     }, [])

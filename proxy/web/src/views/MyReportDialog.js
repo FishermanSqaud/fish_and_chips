@@ -1,30 +1,34 @@
 import React, { useRef, useState, useEffect } from "react";
 import { observer, inject } from "mobx-react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import TextField from "@material-ui/core/TextField"
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import CloseIcon from '@material-ui/icons/Close'
 import ReportsTable from "./ReportsTable";
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
+import CachedIcon from '@material-ui/icons/Cached';
 
 
 const MyReportDialog = inject("store")(
 	observer((props) => {
 
 		const classes = useStyles()
+		const [isLoading, setIsLoading] = useState(false)
 
 		const handleClose = () => {
 			props.store.set(
 				"isMyReportOpen",
 				false
 			)
+		}
+
+		const handleRefresh = () => {
+
+			setIsLoading(true)
+
+			props.store.getMyReports()
+
+			setIsLoading(false)
 		}
 
 
@@ -50,6 +54,14 @@ const MyReportDialog = inject("store")(
 								}
 								의 신고내역
 							</div>
+
+							{isLoading ? 
+								<CircularProgress></CircularProgress>
+							:
+								<IconButton onClick={handleRefresh}>
+									<CachedIcon />
+								</IconButton>
+							}
 
 							<IconButton onClick={handleClose}>
 								<CloseIcon />

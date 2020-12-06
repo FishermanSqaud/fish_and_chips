@@ -43,6 +43,9 @@ const MainPage = inject("store")(
     }
 
     const handleOpenMyReport = () => {
+
+      props.store.getMyReports()
+      
       props.store.set(
         "isMyReportOpen",
         true
