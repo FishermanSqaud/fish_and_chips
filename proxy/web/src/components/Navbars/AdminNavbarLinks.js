@@ -20,7 +20,7 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { observer, inject } from "mobx-react";
-import CheckDialog from '../../views/CheckDialog'
+import LogoutDialog from '../../views/LogoutDialog'
 
 const useStyles = makeStyles(styles);
 
@@ -139,7 +139,7 @@ const AdminNavbarLinks = inject("store")(
         </div>
 
         {props.store.isCheckDialogOpen &&
-          <CheckDialog />}
+          <LogoutDialog />}
       </React.Fragment>
 
     );

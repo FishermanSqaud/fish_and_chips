@@ -11,7 +11,7 @@ import CardBody from "components/Card/CardBody.js";
 import { observer, inject } from "mobx-react";
 import { CircularProgress, IconButton } from "@material-ui/core";
 import DetailDialog from '../DetailDialog'
-import DeleteDialog from '../DeleteDialog'
+import DeleteReportDialog from '../DeleteReportDialog'
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
@@ -44,7 +44,7 @@ const TableList = inject("store")(
 			)
 
 			props.store.set(
-				"isDeleteDialogOpen",
+				"isDeleteReportOpen",
 				true
       )
 		}

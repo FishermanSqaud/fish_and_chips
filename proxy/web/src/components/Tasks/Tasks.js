@@ -68,7 +68,7 @@ const Tasks = inject("store")(
       )
 
       props.store.set(
-        "isDeleteDialogOpen",
+        "isDeleteReportOpen",
         true
       )
     }

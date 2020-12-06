@@ -6,17 +6,21 @@ import InputLabel from "@material-ui/core/InputLabel";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
-import Button from "components/CustomButtons/Button.js";
+import Button from "@material-ui/core/Button";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import { observer, inject } from "mobx-react";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, TextField } from "@material-ui/core";
 import Table from "components/Table/Table.js";
+import ReportsTable from "../ReportsTable"
 
-import avatar from "assets/img/faces/marc.jpg";
+import boyAvatar from "assets/img/boy.png";
+import girlAvatar from "assets/img/girl.png"
+
+import DeleteUserDialog from "views/DeleteUserDialog";
 
 const styles = {
   cardCategoryWhite: {
@@ -42,175 +46,145 @@ const useStyles = makeStyles(styles);
 const UserProfile = inject("store")(
   observer((props) => {
 
-  const classes = useStyles();
-  return (
-    <div>
+    const classes = useStyles();
 
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>피싱 신고 내역</h4>
-              <p className={classes.cardCategoryWhite}>
-                {`업데이트 - ${new Date().toLocaleDateString()}`}
-              </p>
-            </CardHeader>
-            <CardBody>
-              {props.store.loadingMyReport ?
-                <CircularProgress />
-                :
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={["신고 도메인", "제목", "사용자", "신고 시각", "삭제"]}
-                  tableData={props.store.myReports.map((rep) => {
-                    return [
-                      rep.id,
-                      rep.spam_domain,
-                      rep.title,
-                      rep.user_id,
-                      new Date(rep.created_time).toLocaleDateString(),
-                    ]
-                  })}
-                />
-              }
-            </CardBody>
-          </Card>
-        </GridItem>
+    const handleUserDetailOpen = (targetUserId) => (e) => {
 
-        <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      disabled: true
-                    }}
+      const targetUser = props.store.users.find((user) => {
+        return user.id == targetUserId
+      })
+
+      props.store.set(
+        "targetUserForDetails",
+        targetUser
+      )
+
+      props.store.set(
+        "isUserDetailsOpen",
+        true
+      )
+    }
+
+    const handleUserDelete = () => {
+
+        props.store.set(
+          "isDeleteUserOpen",
+          true
+        )
+    }
+
+    const getUserImage = (id) => {
+      if (id % 2 == 0){
+        return boyAvatar
+      } else {
+        return girlAvatar
+      }
+    }
+
+    return (
+      <div>
+
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="warning">
+                <h4 className={classes.cardTitleWhite}>전체 사용자</h4>
+                <p className={classes.cardCategoryWhite}>
+                  {`업데이트 - ${new Date().toLocaleDateString()}`}
+                </p>
+              </CardHeader>
+
+              <CardBody>
+                {props.store.loadingUsers ?
+                  <CircularProgress />
+                  :
+                  <Table
+                    openDetail={handleUserDetailOpen}
+                    tableHeaderColor="warning"
+                    tableHead={["이름", "email", "신고 횟수", "가입 시각"]}
+                    tableData={props.store.users.map((user) => {
+                      return [
+                        user.id,
+                        user.name,
+                        user.email,
+                        user.reports.length,
+                        new Date(user.created_time).toLocaleDateString(),
+                      ]
+                    })}
                   />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
-                    labelText="Username"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Email address"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button color="primary">Update Profile</Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
-    </div>
-  );
-}))
+                }
+              </CardBody>
+            </Card>
+          </GridItem>
+
+          {props.store.isUserDetailsOpen &&
+
+            <React.Fragment>
+              <GridItem xs={12} sm={12} md={8}>
+                <Card>
+
+                  <CardHeader color="warning">
+                    <h4 className={classes.cardTitleWhite}>
+                      사용자 신고내역
+                    </h4>
+                    <p className={classes.cardCategoryWhite}>
+                      클릭 시 자세히 보기
+                    </p>
+                  </CardHeader>
+
+                  <CardBody>
+
+                    <ReportsTable
+                      overview
+                      reports={props.store.targetUserForDetails.reports}
+                    ></ReportsTable>
+
+                  </CardBody>
+                </Card>
+              </GridItem>
+
+              <GridItem xs={12} sm={12} md={4}>
+                <Card profile>
+                  <CardAvatar profile>
+                    <a href="#pablo" onClick={e => e.preventDefault()}>
+                      <img src={getUserImage(props.store.targetUserForDetails.id)} alt="..." />
+                    </a>
+
+                  </CardAvatar>
+                  <CardBody profile>
+                    <h6 className={classes.cardCategory}>
+                      {props.store.targetUserForDetails.email}
+                    </h6>
+                    <h4 className={classes.cardTitle}>
+                      {props.store.targetUserForDetails.name}
+                    </h4>
+
+                    <p className={classes.description}>
+                      가입 날짜 : {
+                        new Date(props.store.targetUserForDetails.created_time).toLocaleDateString()
+                      } <br></br>
+                      총 신고 횟수 : {props.store.targetUserForDetails.reports.length}
+                    </p>
+
+                    <Button
+                      onClick={handleUserDelete}
+                      color="secondary"
+                      variant="contained">
+                      회원 탈퇴
+                    </Button>
+
+                  </CardBody>
+                </Card>
+              </GridItem>
+
+              {props.store.isDeleteUserOpen &&
+                <DeleteUserDialog/>}
+
+            </React.Fragment>
+          }
+        </GridContainer>
+      </div>
+    );
+  }))
 
 export default UserProfile

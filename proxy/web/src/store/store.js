@@ -1,5 +1,6 @@
 import { decorate, observable, action, entries } from "mobx";
 import jwt from 'jsonwebtoken'
+import { PropTypes } from "mobx-react";
 
 class Store {
   constructor() {
@@ -29,15 +30,17 @@ class Store {
     this.userName = localStorage.getItem("userName")
 
     this.myReports = []
-    
+
     // For Admin
     this.users = []
     this.targetUserForDetails = {}
+    this.isUserDetailsOpen = false
 
+    this.isDeleteUserOpen = false
     this.isReportDialogOpen = false
     this.isCheckDialogOpen = false
     this.isMyReportOpen = false
-    this.isDeleteDialogOpen = false
+    this.isDeleteReportOpen = false
 
     this.reportsRowsPerPage = 10
     this.reportsTablePageNum = 0
@@ -133,9 +136,90 @@ class Store {
     }
   }
 
+  deleteUser = async (deleteUserId) => {
+    try {
+
+      var headers = {
+        "Content-Type": "application/json",
+      }
+
+      headers["Authorization"] = `Bearer ${this.accessToken}`
+
+      this.set(
+        "loadingUsers",
+        true
+      )
+
+      const response = await fetch(
+        `${this.backendUrl}/users/${deleteUserId}`,
+        {
+          method: "DELETE",
+          headers: headers
+        }
+      )
+
+      if (response.ok) {
+
+        const remained = this.users.filter(
+          (user) => user.id != deleteUserId
+        )
+
+        this.set(
+          "users",
+          remained
+        )
+
+        this.set(
+          "snackbarMsg",
+          `${this.targetUserForDetails.name} 탈퇴 완료`
+        )
+
+        this.set(
+          "snackbarInfoOpen",
+          true
+        )
+
+        this.set(
+          "isUserDetailsOpen",
+          false
+        )
+
+
+      } else {
+        this.set(
+          "snackbarMsg",
+          `${this.targetUserForDetails.name} 탈퇴 오류`
+        )
+
+        this.set(
+          "snackbarErrorOpen",
+          true
+        )
+      }
+
+    } catch (e) {
+
+      this.set(
+        "snackbarMsg",
+        `${this.targetUserForDetails.name} 탈퇴 오류`
+      )
+
+      this.set(
+        "snackbarErrorOpen",
+        true
+      )
+    }
+
+
+    this.set(
+      "loadingUsers",
+      false
+    )
+  }
+
 
   // Function for admin
-  getUsers= async (accessToken) => {
+  getUsers = async (accessToken) => {
 
     var headers = {
       "Content-Type": "application/json",
@@ -170,7 +254,7 @@ class Store {
         "accessToken",
         accessToken
       )
-      
+
       const responseJson = await response.json()
 
 
@@ -191,22 +275,22 @@ class Store {
     }
   }
 
-  
+
   compareCreateTime = (contentA, contentB, isAscend = false) => {
     if (isAscend) {
       return new Date(contentB.created_time) <
         new Date(contentA.created_time)
         ? 1
         : new Date(contentB.created_time) > new Date(contentA.created_time)
-        ? -1
-        : 0;
+          ? -1
+          : 0;
     } else {
       return new Date(contentB.created_time) >
         new Date(contentA.created_time)
         ? 1
         : new Date(contentB.created_time) < new Date(contentA.created_time)
-        ? -1
-        : 0;
+          ? -1
+          : 0;
     }
   };
 
@@ -279,15 +363,17 @@ decorate(Store, {
   userName: observable,
   isReportDialogOpen: observable,
   isCheckDialogOpen: observable,
-  isDeleteDialogOpen: observable,
+  isDeleteReportOpen: observable,
   isMyReportOpen: observable,
   myReports: observable,
-  loadingMyReport :observable,
-  users : observable,
-  loadingUsers : observable,
+  loadingMyReport: observable,
+  users: observable,
+  loadingUsers: observable,
+  isUserDetailsOpen: observable,
+  isDeleteUserOpen: observable,
 
   getMyReports: action,
-  targetUserForDetails : observable,
+  targetUserForDetails: observable,
 
   snackbarInfoOpen: observable,
   snackbarWarningOpen: observable,
@@ -295,7 +381,7 @@ decorate(Store, {
 
   set: action,
   signIn: action,
-  getUsers : action,
+  getUsers: action,
 
   reportsRowsPerPage: observable,
   reportsTablePageNum: observable,

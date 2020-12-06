@@ -81,7 +81,7 @@ const ReportsTable = inject("store")(
 			)
 
 			props.store.set(
-				"isDeleteDialogOpen",
+				"isDeleteReportOpen",
 				true
 			)
 		}
@@ -115,15 +115,25 @@ const ReportsTable = inject("store")(
 
 				<TableHead>
 					<TableRow>
-						{columns.map((column, idx) => (
-							<TableCell
-								key={idx}
-								align={column.align}
-								style={{ width: column.width }}
-							>
-								{column.label}
-							</TableCell>
-						))}
+						{columns.reduce((prev, column, idx) => {
+							if (column.label == "제목") {
+								if (props.overview != undefined) {
+									return prev
+								}
+							}
+
+							prev.push(
+								<TableCell
+									key={idx}
+									align={column.align}
+									style={{ width: column.width }}
+								>
+									{column.label}
+								</TableCell>
+							)
+
+							return prev
+						}, [])}
 					</TableRow>
 				</TableHead>
 
@@ -144,7 +154,9 @@ const ReportsTable = inject("store")(
 										<TableCell />
 										<TableCell />
 										<TableCell />
-										<TableCell />
+										{props.overview == undefined &&
+											<TableCell />
+										}
 									</TableRow>
 								)
 
@@ -173,31 +185,34 @@ const ReportsTable = inject("store")(
 													row.id
 												)}>
 											{row.spam_domain.length > 40 ?
-											row.spam_domain.substring(0,40) + "..."
-											:
-											row.spam_domain
+												row.spam_domain.substring(0, 40) + "..."
+												:
+												row.spam_domain
 											}
 										</Button>
 									</TableCell>
 
-									<TableCell
-										style={{
-											width: columns[2].width,
-										}}
-										align={columns[2].align}>
-										<Button
+
+									{props.overview == undefined &&
+										<TableCell
 											style={{
-												padding: 'unset',
-												textTransform: 'unset',
-												minWidth : 'unset'
+												width: columns[2].width,
 											}}
-											onClick={
-												handleOpenDetailModal(
-													row.id
-												)}>
-											{row.title}
-										</Button>
-									</TableCell>
+											align={columns[2].align}>
+											<Button
+												style={{
+													padding: 'unset',
+													textTransform: 'unset',
+													minWidth: 'unset'
+												}}
+												onClick={
+													handleOpenDetailModal(
+														row.id
+													)}>
+												{row.title}
+											</Button>
+										</TableCell>
+									}
 
 									<TableCell
 										align={columns[3].align}

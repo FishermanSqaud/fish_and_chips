@@ -285,3 +285,98 @@ exports.getUsersWithReports = async (req, res) => {
 			.send("서버 오류")
 	}
 }
+
+
+// For Admin User
+// Deleting User will not delete his/her report history
+//
+exports.deleteUser = async (req, res) => {
+
+	try {
+
+		if (!auth.isAccessTokenSent(req)){
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+		
+		if (!tokenResult.isAdmin) {
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("접근 권한이 없습니다")
+
+			return
+		}
+
+
+		var conn = await db.getConn()
+
+		const userParams = [
+			req.params.userId
+		]
+
+		
+		const result = await conn.sendQuery(
+			db.query.user.delete,
+			userParams
+		)
+
+
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+
+		res.setHeader(consts.HEADER.AUTH, token)
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+
+		if (isDeletedSuccess(result)){
+	
+			res.status(consts.STATUS_CODE.OK)
+				.send("삭제 성공")
+	
+		} else {
+	
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("삭제 실패")
+		}
+
+
+	} catch (e) {
+
+		console.log("삭제 중 서버 에러 - ", e)
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+		.send("서버 오류")
+	}
+}
+
+const isDeletedSuccess = (result) => {
+	return result.results.affectedRows == 1
+}

@@ -14,7 +14,7 @@ exports.query = {
         get :  `select * from users where email = ?`,
         getAll : 'select * from users',
         getWithPwd : `select * from users where email = ? and password = ?`,
-        delete : `delete from users where email = ?`
+        delete : `delete from users where id = ?`
     },
     report : {
         getWithDomain : 'select * from reports where spam_domain = ?',

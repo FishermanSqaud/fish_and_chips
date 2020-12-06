@@ -16,7 +16,7 @@ import { observer, inject } from "mobx-react";
 import { useHistory } from 'react-router-dom'
 import Snackbars from "./Snackbars.js";
 import DetailDialog from './DetailDialog'
-import DeleteDialog from './DeleteDialog'
+import DeleteReportDialog from './DeleteReportDialog'
 import MyReportDialog from './MyReportDialog'
 
 const Admin = inject("store")(
@@ -62,10 +62,10 @@ const Admin = inject("store")(
       props.store.getUsers()
 
       // 30초마다 새로 불러오기
-      setInterval(() => {
-        props.store.getMyReports()
-        props.store.getUsers()
-      }, 1000 * 30)
+      // setInterval(() => {
+      //   props.store.getMyReports()
+      //   props.store.getUsers()
+      // }, 1000 * 30)
 
     }, [])
 
@@ -105,8 +105,8 @@ const Admin = inject("store")(
         {props.store.isReportDetailDialogOpen &&
           <DetailDialog />}
 
-        {props.store.isDeleteDialogOpen &&
-          <DeleteDialog />}
+        {props.store.isDeleteReportOpen &&
+          <DeleteReportDialog />}
 
         {props.store.isMyReportOpen &&
           <MyReportDialog 

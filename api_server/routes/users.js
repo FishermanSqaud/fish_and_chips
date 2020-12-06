@@ -14,4 +14,7 @@ usersRouter.post('/signIn', usersHandler.signIn)
 // Admin Function
 usersRouter.get('/', usersHandler.getUsersWithReports)
 
+// Admin Function
+usersRouter.delete('/:userId', usersHandler.deleteUser)
+
 module.exports = usersRouter;
