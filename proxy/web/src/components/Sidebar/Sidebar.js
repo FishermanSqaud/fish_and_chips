@@ -99,10 +99,12 @@ export default function Sidebar(props) {
       })}
     </List>
   );
+
+
   var brand = (
     <div className={classes.logo}>
       <a
-        href="https://www.creative-tim.com?ref=mdr-sidebar"
+        href="https://github.com/FishermanSqaud"
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive
         })}
@@ -115,6 +117,7 @@ export default function Sidebar(props) {
       </a>
     </div>
   );
+
   return (
     <div>
       <Hidden mdUp implementation="css">
