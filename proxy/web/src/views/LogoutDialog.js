@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 
 const ENTER_KEY_CODE = 13
 
-const CheckDialog = inject("store")(
+const LogoutDialog = inject("store")(
 	observer((props) => {
 
 		const history = useHistory()
@@ -121,4 +121,4 @@ const CheckDialog = inject("store")(
 		);
 	}))
 
-export default CheckDialog;
+export default LogoutDialog;

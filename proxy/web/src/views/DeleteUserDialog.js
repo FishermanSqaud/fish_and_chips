@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 // require('dotenv').config();
 
-const DeleteDialog = inject("store")(
+const DeleteUserDialog = inject("store")(
 	observer((props) => {
 
 		useEffect(() => {
@@ -31,87 +31,36 @@ const DeleteDialog = inject("store")(
 
 		const handleClose = () => {
 			props.store.set(
-				"isDeleteDialogOpen",
+				"isDeleteUserOpen",
 				false
 			)
 		}
 
-		const handleReportDelete = async () => {
+		const handleUserDelete = async () => {
 
 			try {
 
-				const response = await fetch(
-					`${props.store.backendUrl}/reports/${props.store.deleteReport.id}`,
-					{
-						headers: {
-							'Authorization': `Bearer ${props.store.accessToken}`
-						},
-						method: "DELETE"
-					}
-				)
+				const userId = props.store.targetUserForDetails.id
 
-				if (response.ok) {
-
-
-					const accessToken = response.headers.get(
-						"Authorization"
-					)
-
-					this.set(
-						"accessToken",
-						accessToken
-					)
-
-					props.store.set(
-						"snackbarMsg",
-						'신고 내역 삭제 성공'
-					)
-
-					props.store.set(
-						"snackbarInfoOpen",
-						true
-					)
-
-					const remained = props.store.myReports.filter(
-						(rep) => rep.id != props.store.deleteReport.id
-					)
-
-					props.store.set(
-						"myReports",
-						remained
-					)
-
-				} else {
-					props.store.set(
-						"snackbarMsg",
-						`신고내역 삭제 실패`
-					)
-
-					props.store.set(
-						"snackbarErrorOpen",
-						true
-					)
-				}
-
-			} catch (err) {
+				await props.store.deleteUser(userId)
 
 				props.store.set(
-					"snackbarMsg",
-					`신고내역 삭제 실패`
-				)
+					"targetUserForDetails",
+					{}
+				  )
 
-				props.store.set(
-					"snackbarErrorOpen",
-					true
-				)
+				handleClose()
+
+			} catch (e) {
+
 			}
 		}
 
 		return (
 			<div>
-				{props.store.isDeleteDialogOpen &&
+				{props.store.isDeleteUserOpen &&
 					<Dialog
-						open={props.store.isDeleteDialogOpen}
+						open={props.store.isDeleteUserOpen}
 						onClose={handleClose}
 						style={{
 							minWidth: 350
@@ -120,7 +69,7 @@ const DeleteDialog = inject("store")(
 						aria-describedby="alert-dialog-description"
 					>
 						<DialogTitle id="alert-dialog-title">
-							{`신고 내역 삭제`}
+							{`사용자 탈퇴`}
 						</DialogTitle>
 
 						<div style={{
@@ -139,13 +88,14 @@ const DeleteDialog = inject("store")(
 							}}>
 
 								<div>
-									{`👮‍♀️신고 도메인 : ${props.store.deleteReport.spam_domain}`}
+									{`사용자 명 : ${props.store.targetUserForDetails.name}`}
 								</div>
 								<div style={{ marginTop: 10 }}>
-									{`✉️ 신고 제목 : ${props.store.deleteReport.title}`}
+									{`사용자 이메일 : ${props.store.targetUserForDetails.email}`}
 								</div>
+
 								<div style={{ marginTop: 10 }}>
-									해당 신고 내역을 정말로 삭제하시겠습니까?
+									해당 사용자를 정말로 탈퇴시키겠습니까?
                 </div>
 							</div>
 
@@ -159,10 +109,10 @@ const DeleteDialog = inject("store")(
               </Button>
 							<Button
 								id="submit"
-								onClick={handleReportDelete}
+								onClick={handleUserDelete}
 								color="primary"
 								autoFocus>
-								삭제
+								탈퇴
               </Button>
 						</DialogActions>
 					</Dialog>}
@@ -170,4 +120,4 @@ const DeleteDialog = inject("store")(
 		);
 	}))
 
-export default DeleteDialog;
+export default DeleteUserDialog;
