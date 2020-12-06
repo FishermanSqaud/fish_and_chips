@@ -57,7 +57,7 @@ const DeleteReportDialog = inject("store")(
 						"Authorization"
 					)
 
-					props.set(
+					props.store.set(
 						"accessToken",
 						accessToken
 					)
