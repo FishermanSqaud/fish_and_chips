@@ -9,11 +9,13 @@ import MyReportDialog from "./MyReportDialog.js";
 import DeleteReportDialog from "./DeleteReportDialog";
 import DetailDialog from "./DetailDialog";
 import { CircularProgress } from "@material-ui/core";
+import {useHistory} from 'react-router-dom'
 
 
 const Index = inject("store")(
   observer((props) => {
     const classes = useStyles()
+    const history = useHistory()
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -30,15 +32,20 @@ const Index = inject("store")(
     });
 
     useEffect(() => {
+
+      if (props.store.isAdmin){
+        history.push('/admin')
+        return
+      }
+
       async function init() {
         try {
-
           setIsLoading(true)
 
           await props.store.getMyReports()
 
           setIsLoading(false)
-
+          
         } catch (err) {
           alert(err)
         }
