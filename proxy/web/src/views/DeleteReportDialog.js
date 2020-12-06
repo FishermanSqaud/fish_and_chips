@@ -105,6 +105,8 @@ const DeleteReportDialog = inject("store")(
 					true
 				)
 			}
+
+			handleClose()
 		}
 
 		return (
