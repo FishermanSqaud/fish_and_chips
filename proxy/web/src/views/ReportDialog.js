@@ -132,7 +132,7 @@ const ReportDialog = inject("store")(
 						"Authorization"
 					)
 
-					this.set(
+					props.set(
 						"accessToken",
 						accessToken
 					)
