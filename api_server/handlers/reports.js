@@ -125,6 +125,16 @@ exports.getReports = async (req, res) => {
 
 		console.log("신고 내역 요청 응답 ", fetchedReports)
 
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
+
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,
 			consts.HEADER.JSON
@@ -201,6 +211,16 @@ exports.createReport = async (req, res) => {
 			db.query.report.create,
 			userParams
 		)		
+
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
 		
 
 		if (isCreatedOk(result)){
@@ -290,6 +310,16 @@ exports.updateReport = async (req, res) => {
 			userParams
 		)
 
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
+
 		// console.log("수정 결과 ", result)
 
 		if (isUpdatedOk(result)){
@@ -357,6 +387,16 @@ exports.deleteReport = async (req, res) => {
 			db.query.report.delete,
 			userParams
 		)
+
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,

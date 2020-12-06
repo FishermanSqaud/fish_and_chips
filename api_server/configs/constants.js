@@ -1,4 +1,4 @@
-exports.TOKEN_EXPIRATION = '3h'
+exports.TOKEN_EXPIRATION = '7d'
 
 exports.HEADER = {
     AUTH : "Authorization",

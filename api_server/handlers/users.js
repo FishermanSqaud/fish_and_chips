@@ -134,15 +134,14 @@ exports.signIn = async (req, res) => {
 				isAdmin: user.is_admin
 			}
 
-			const token = await auth.publishJwt(payload)
+			token = await auth.publishJwt(payload)
 
+			res.setHeader(consts.HEADER.AUTH, token)
 
 			res.setHeader(
 				consts.HEADER.CONTENT_TYPE,
 				consts.HEADER.JSON
 			)
-
-			res.setHeader(consts.HEADER.AUTH, token)
 
 			res.status(consts.STATUS_CODE.OK)
 				.send(JSON.stringify({
@@ -192,7 +191,7 @@ const isSignInInfoSent = (req) => {
 
 
 // GET
-exports.getUsers = async (req, res) => {
+exports.getUsersWithReports = async (req, res) => {
 
 	try {
 
@@ -250,6 +249,17 @@ exports.getUsers = async (req, res) => {
 
 		// Must Release connection after use
 		conn.release()
+
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
+		
 
 		res.setHeader(
 			consts.HEADER.CONTENT_TYPE,

@@ -155,6 +155,16 @@ exports.registerAuthDomain = async (req, res) => {
 		
 		console.log("등록 결과 - ", result.results)
 
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
+
 		if (isCreatedOk(result)){
 			
 			res.status(consts.STATUS_CODE.OK)
@@ -247,6 +257,16 @@ exports.updateAuthDomain = async (req, res) => {
 			userParams
 		)
 
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
+
 		// console.log("수정 결과 ", result)
 
 		if (isUpdatedOk(result)){
@@ -325,6 +345,16 @@ exports.deleteReport = async (req, res) => {
 			consts.HEADER.CONTENT_TYPE,
 			consts.HEADER.TEXT
 		)
+
+		const payload = {
+			email: tokenResult.email,
+			userId: tokenResult.userId,
+			isAdmin: tokenResult.isAdmin
+		}
+
+		token = await auth.publishJwt(payload)
+
+		res.setHeader(consts.HEADER.AUTH, token)
 
 		// IF Deleted
 		if (isDeletedSuccess(result)){

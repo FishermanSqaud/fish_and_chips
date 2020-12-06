@@ -12,6 +12,6 @@ usersRouter.post('/', usersHandler.signUp)
 usersRouter.post('/signIn', usersHandler.signIn)
 
 // Admin Function
-usersRouter.get('/', usersHandler.getUsers)
+usersRouter.get('/', usersHandler.getUsersWithReports)
 
 module.exports = usersRouter;
