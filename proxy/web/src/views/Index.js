@@ -9,34 +9,20 @@ import MyReportDialog from "./MyReportDialog.js";
 import DeleteReportDialog from "./DeleteReportDialog";
 import DetailDialog from "./DetailDialog";
 import { CircularProgress } from "@material-ui/core";
+import {useHistory} from 'react-router-dom'
 
 
 const Index = inject("store")(
   observer((props) => {
     const classes = useStyles()
+    const history = useHistory()
 
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-
-
       document.body.classList.add("index-page");
       document.body.classList.add("sidebar-collapse");
       document.documentElement.classList.remove("nav-open");
-
-      const body = document.getElementsByTagName("body")[0]
-      if (body) {
-        body.style.fontWeight = 400
-        body.style.lineHeight = 1.5
-        body.style.color = "#2c2c2c"
-        body.style.fontSize = 14
-        body.style.fontFamily = '"Montserrat", "Helvetica Neue", Arial, sans-serif'
-        body.style.overflowX = 'hidden'
-        body.style.margin = 0
-        body.style.backgroundColor = 'white'
-        body.style.textAlign = 'left'
-        body.style.webkitFontSmoothing = 'antialiased'
-      }
 
       return function cleanup() {
         document.body.classList.remove("index-page");
@@ -46,15 +32,20 @@ const Index = inject("store")(
     });
 
     useEffect(() => {
+
+      if (props.store.isAdmin){
+        history.push('/admin')
+        return
+      }
+
       async function init() {
         try {
-
           setIsLoading(true)
 
           await props.store.getMyReports()
 
           setIsLoading(false)
-
+          
         } catch (err) {
           alert(err)
         }

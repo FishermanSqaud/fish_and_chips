@@ -143,12 +143,14 @@ const Dashboard = inject("store")(
                   <Accessibility />
                 </CardIcon>
                 <p className={classes.cardCategory}>총 사용자</p>
-                <h3 className={classes.cardTitle}>+1</h3>
+                <h3 className={classes.cardTitle}>
+                  {props.store.users.length}
+                </h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
                   <Update />
-                  업데이트 예정
+                  {`최신 : ${new Date().toLocaleDateString()}`}
               </div>
               </CardFooter>
             </Card>
@@ -265,7 +267,11 @@ const Dashboard = inject("store")(
                   tabContent: (
                     <Tasks
                       checkedIndexes={[]}
-                      tasksIndexes={[0, 1, 2, 3, 4, 5, 6]}
+                      tasksIndexes={props.store.myReports.length >= 6 ?
+                      [0, 1, 2, 3, 4, 5, 6]
+                      :
+                      props.store.myReports.map((rep, idx)=> idx)
+                      }
                       tasks={props.store.myReports.map((rep) => rep)}
                       contentKey={"spam_domain"}
                     />
@@ -348,7 +354,7 @@ const Dashboard = inject("store")(
         user.email,
         user.reportCnt
       ]
-    })
+    }).slice(0, 8)
 
   }
 
