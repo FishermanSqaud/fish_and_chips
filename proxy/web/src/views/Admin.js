@@ -15,6 +15,8 @@ import logo from "assets/img/fish_and_chips_icon_48.png";
 import { observer, inject } from "mobx-react";
 import {useHistory} from 'react-router-dom'
 import Snackbars from "./Snackbars.js";
+import DetailDialog from './DetailDialog'
+import DeleteDialog from './DeleteDialog'
 
 
 const Admin = inject("store")(
@@ -77,6 +79,8 @@ const Admin = inject("store")(
 
   }, [])
 
+  
+
   return (
     <div className={classes.wrapper}>
       <Sidebar
@@ -107,6 +111,12 @@ const Admin = inject("store")(
       </div>
 
       <Snackbars></Snackbars>
+
+      {props.store.isReportDetailDialogOpen &&
+          <DetailDialog />}
+
+        {props.store.isDeleteDialogOpen &&
+          <DeleteDialog />}
     </div>
   );
 }))

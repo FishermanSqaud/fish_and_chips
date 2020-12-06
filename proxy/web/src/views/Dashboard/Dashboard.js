@@ -247,7 +247,8 @@ const Dashboard = inject("store")(
                     <Tasks
                       checkedIndexes={[]}
                       tasksIndexes={[0, 1, 2, 3, 4, 5, 6]}
-                      tasks={props.store.myReports.map((rep) => rep.spam_domain)}
+                      tasks={props.store.myReports.map((rep) => rep)}
+                      contentKey={"spam_domain"}
                     />
                   )
                 },

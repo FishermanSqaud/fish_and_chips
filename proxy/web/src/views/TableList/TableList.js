@@ -87,12 +87,6 @@ const TableList = inject("store")(
           </GridItem>
         </GridContainer>
 
-        {props.store.isReportDetailDialogOpen &&
-          <DetailDialog />}
-
-        {props.store.isDeleteDialogOpen &&
-          <DeleteDialog />}
-
       </React.Fragment>
 
     );
