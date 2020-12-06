@@ -103,7 +103,12 @@ const Tasks = inject("store")(
               <TableCell className={classes.tableActions}>
                 <Tooltip
                   id="tooltip-top"
-                  title="빠른 수정"
+                  title={
+                    typeof tasks[taskIdx] == 'object' ?
+                      "빠른 수정"
+                      :
+                      "지원 예정 🤓"
+                  }
                   placement="top"
                   classes={{ tooltip: classes.tooltip }}
                 >
@@ -127,7 +132,12 @@ const Tasks = inject("store")(
 
                 <Tooltip
                   id="tooltip-top-start"
-                  title="빠른 삭제"
+                  title={
+                    typeof tasks[taskIdx] == 'object' ?
+                      "빠른 삭제"
+                      :
+                      "지원 예정 🤓"
+                  }
                   placement="top"
                   classes={{ tooltip: classes.tooltip }}
                 >

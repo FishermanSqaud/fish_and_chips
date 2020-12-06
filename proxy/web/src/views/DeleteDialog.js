@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { observer, inject } from "mobx-react";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,7 +13,7 @@ const DeleteDialog = inject("store")(
 
 		useEffect(() => {
 			const ENTER_KEY_CODE = 13
-			
+
 			const enterSubmit = (e) => {
 				if (e.keyCode == ENTER_KEY_CODE) {
 					const submitBtn = document.getElementById("submit")
@@ -36,7 +36,7 @@ const DeleteDialog = inject("store")(
 			)
 		}
 
-		const handleLocationDelete = async () => {
+		const handleReportDelete = async () => {
 
 			try {
 
@@ -51,6 +51,17 @@ const DeleteDialog = inject("store")(
 				)
 
 				if (response.ok) {
+
+
+					const accessToken = response.headers.get(
+						"Authorization"
+					)
+
+					this.set(
+						"accessToken",
+						accessToken
+					)
+
 					props.store.set(
 						"snackbarMsg",
 						'신고 내역 삭제 성공'
@@ -148,7 +159,7 @@ const DeleteDialog = inject("store")(
               </Button>
 							<Button
 								id="submit"
-								onClick={handleLocationDelete}
+								onClick={handleReportDelete}
 								color="primary"
 								autoFocus>
 								삭제

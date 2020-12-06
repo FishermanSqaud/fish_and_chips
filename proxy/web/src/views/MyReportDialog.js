@@ -13,28 +13,12 @@ import CloseIcon from '@material-ui/icons/Close'
 import ReportsTable from "./ReportsTable";
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
-import DeleteDialog from "./DeleteDialog";
-import DetailDialog from "./DetailDialog";
 
 
 const MyReportDialog = inject("store")(
 	observer((props) => {
 
-		const [isLoading, setIsLoading] = useState(true)
-
 		const classes = useStyles()
-
-		useEffect(() => {
-			async function init() {
-
-				await props.store.getMyReports()
-
-				setIsLoading(false)
-			}
-
-			init()
-		}, [])
-
 
 		const handleClose = () => {
 			props.store.set(
@@ -47,40 +31,38 @@ const MyReportDialog = inject("store")(
 		return (
 			<React.Fragment>
 
-				{isLoading ?
-					<CircularProgress />
-					:
-					<Dialog
-						aria-labelledby="simple-modal-title"
-						aria-describedby="simple-modal-description"
-						open={props.store.isMyReportOpen}
-						onClose={handleClose}
-						className={classes.dialog}
-						classes={{ paperScrollPaper: classes.dialog }}
-					>
-						<div
-							className={classes.dialogTitle}>
-							<div className={classes.newsTitle}>
-								<div style={{ width: '100%' }}>
-									{`나의 신고내역`}
-								</div>
-
-								<IconButton onClick={handleClose}>
-									<CloseIcon/>
-								</IconButton>
+				<Dialog
+					aria-labelledby="simple-modal-title"
+					aria-describedby="simple-modal-description"
+					open={props.store.isMyReportOpen}
+					onClose={handleClose}
+					className={classes.dialog}
+					classes={{ paperScrollPaper: classes.dialog }}
+				>
+					<div
+						className={classes.dialogTitle}>
+						<div className={classes.newsTitle}>
+							<div style={{ width: '100%' }}>
+								{"name" in props ?
+									props.name
+									:
+									`나`
+								}
+								의 신고내역
 							</div>
+
+							<IconButton onClick={handleClose}>
+								<CloseIcon />
+							</IconButton>
 						</div>
+					</div>
 
-						<ReportsTable></ReportsTable>
+					<ReportsTable
+						reports={props.reports}
+					></ReportsTable>
 
-						{props.store.isDeleteDialogOpen &&
-							<DeleteDialog />}
+				</Dialog>
 
-						{props.store.isReportDetailDialogOpen &&
-							<DetailDialog/>}
-
-					</Dialog>
-				}
 			</React.Fragment>
 		)
 

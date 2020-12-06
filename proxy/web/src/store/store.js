@@ -12,6 +12,7 @@ class Store {
     this.isAdmin = false
 
     this.loadingMyReport = false
+    this.loadingUsers = false
 
     this.accessToken = localStorage.getItem("accessToken")
     if (this.accessToken != null || this.accessToken != undefined) {
@@ -28,6 +29,10 @@ class Store {
     this.userName = localStorage.getItem("userName")
 
     this.myReports = []
+    
+    // For Admin
+    this.users = []
+    this.targetUserForDetails = {}
 
     this.isReportDialogOpen = false
     this.isCheckDialogOpen = false
@@ -98,6 +103,15 @@ class Store {
 
     if (response.ok) {
 
+      const accessToken = response.headers.get(
+        "Authorization"
+      )
+
+      this.set(
+        "accessToken",
+        accessToken
+      )
+
       const responseJson = await response.json()
 
       responseJson.reports.sort(this.compareCreateTime)
@@ -109,6 +123,64 @@ class Store {
 
       this.set(
         "loadingMyReport",
+        false
+      )
+
+      return true
+
+    } else {
+      return false
+    }
+  }
+
+
+  // Function for admin
+  getUsers= async (accessToken) => {
+
+    var headers = {
+      "Content-Type": "application/json",
+    }
+
+    if (accessToken == undefined) {
+      headers["Authorization"] = `Bearer ${this.accessToken}`
+    } else {
+      headers["Authorization"] = `Bearer ${accessToken}`
+    }
+
+    this.set(
+      "loadingUsers",
+      true
+    )
+
+    const response = await fetch(
+      `${this.backendUrl}/users`,
+      {
+        method: "GET",
+        headers: headers
+      }
+    )
+
+    if (response.ok) {
+
+      const accessToken = response.headers.get(
+        "Authorization"
+      )
+
+      this.set(
+        "accessToken",
+        accessToken
+      )
+      
+      const responseJson = await response.json()
+
+
+      this.set(
+        "users",
+        responseJson.users
+      )
+
+      this.set(
+        "loadingUsers",
         false
       )
 
@@ -211,8 +283,11 @@ decorate(Store, {
   isMyReportOpen: observable,
   myReports: observable,
   loadingMyReport :observable,
-  
+  users : observable,
+  loadingUsers : observable,
+
   getMyReports: action,
+  targetUserForDetails : observable,
 
   snackbarInfoOpen: observable,
   snackbarWarningOpen: observable,
@@ -220,6 +295,7 @@ decorate(Store, {
 
   set: action,
   signIn: action,
+  getUsers : action,
 
   reportsRowsPerPage: observable,
   reportsTablePageNum: observable,

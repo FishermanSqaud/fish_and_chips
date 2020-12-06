@@ -6,6 +6,9 @@ import Snackbars from './Snackbars'
 import ReportDialog from './ReportDialog'
 import CheckDialog from './CheckDialog'
 import MyReportDialog from "./MyReportDialog.js";
+import DeleteDialog from "./DeleteDialog";
+import DetailDialog from "./DetailDialog";
+import { CircularProgress } from "@material-ui/core";
 
 
 const Index = inject("store")(
@@ -48,7 +51,7 @@ const Index = inject("store")(
 
           setIsLoading(true)
 
-          // await props.store.getAllReport()
+          await props.store.getMyReports()
 
           setIsLoading(false)
 
@@ -74,7 +77,17 @@ const Index = inject("store")(
             <CheckDialog />}
 
           {props.store.isMyReportOpen &&
-            <MyReportDialog />} 
+            (props.store.loadingMyReport ?
+              <CircularProgress></CircularProgress>
+              :
+              <MyReportDialog reports={props.store.myReports} />)
+          }
+
+          {props.store.isDeleteDialogOpen &&
+            <DeleteDialog />}
+
+          {props.store.isReportDetailDialogOpen &&
+            <DetailDialog />}
         </div>
 
         <Snackbars></Snackbars>

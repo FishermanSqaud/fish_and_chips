@@ -13,113 +13,108 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/squad_1.jpg";
 import logo from "assets/img/fish_and_chips_icon_48.png";
 import { observer, inject } from "mobx-react";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import Snackbars from "./Snackbars.js";
 import DetailDialog from './DetailDialog'
 import DeleteDialog from './DeleteDialog'
-
+import MyReportDialog from './MyReportDialog'
 
 const Admin = inject("store")(
-	observer((props) => {
-    
-  // styles
-  const classes = useStyles();
-  const history = useHistory()
+  observer((props) => {
 
-  // ref to help us initialize PerfectScrollbar on windows devices
-  const mainPanel = React.createRef();
-  // states and functions
-  const [image, setImage] = React.useState(bgImage);
-  const [color, setColor] = React.useState("blue");
-  const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleImageClick = image => {
-    setImage(image);
-  };
-  const handleColorClick = color => {
-    setColor(color);
-  };
-  const handleFixedClick = () => {
-    if (fixedClasses === "dropdown") {
-      setFixedClasses("dropdown show");
-    } else {
-      setFixedClasses("dropdown");
-    }
-  };
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-  const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
-  };
-  
+    // styles
+    const classes = useStyles();
+    const history = useHistory()
 
-  useEffect(()=>{
-    if (!props.store.isAdmin){
-      props.store.set(
-        "snackbarMsg",
-        "접근 권한이 없습니다."
-      )
+    // ref to help us initialize PerfectScrollbar on windows devices
+    const mainPanel = React.createRef();
+    // states and functions
+    const [image, setImage] = React.useState(bgImage);
+    const [color, setColor] = React.useState("blue");
+    const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
+    const [mobileOpen, setMobileOpen] = React.useState(false);
 
-      props.store.set(
-        "snackbarWarningOpen",
-        true
-      )
+    const handleDrawerToggle = () => {
+      setMobileOpen(!mobileOpen);
+    };
+    const getRoute = () => {
+      return window.location.pathname !== "/admin/maps";
+    };
 
-      history.push('/')
-      return
-    }
 
-    props.store.getMyReports()
+    useEffect(() => {
+      if (!props.store.isAdmin) {
+        props.store.set(
+          "snackbarMsg",
+          "접근 권한이 없습니다."
+        )
 
-    // 30초마다 새로 불러오기
-    setInterval(()=>{
+        props.store.set(
+          "snackbarWarningOpen",
+          true
+        )
+
+        history.push('/')
+        return
+      }
+
       props.store.getMyReports()
-    }, 1000 * 30)
+      props.store.getUsers()
 
-  }, [])
+      // 30초마다 새로 불러오기
+      setInterval(() => {
+        props.store.getMyReports()
+        props.store.getUsers()
+      }, 1000 * 30)
 
-  
+    }, [])
 
-  return (
-    <div className={classes.wrapper}>
-      <Sidebar
-        routes={routes}
-        logoText={"피쉬 앤 칩스 관리자"}
-        logo={logo}
-        image={image}
-        handleDrawerToggle={handleDrawerToggle}
-        open={mobileOpen}
-        color={color}
-        {...props}
-      />
-      <div className={classes.mainPanel} ref={mainPanel}>
-        <Navbar
+
+
+    return (
+      <div className={classes.wrapper}>
+        <Sidebar
           routes={routes}
+          logoText={"피쉬 앤 칩스 관리자"}
+          logo={logo}
+          image={image}
           handleDrawerToggle={handleDrawerToggle}
+          open={mobileOpen}
+          color={color}
           {...props}
         />
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
-          </div>
-        ) : (
-          <div className={classes.map}>{switchRoutes}</div>
-        )}
-        {getRoute() ? <Footer /> : null}
-      </div>
+        <div className={classes.mainPanel} ref={mainPanel}>
+          <Navbar
+            routes={routes}
+            handleDrawerToggle={handleDrawerToggle}
+            {...props}
+          />
+          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
+          {getRoute() ? (
+            <div className={classes.content}>
+              <div className={classes.container}>{switchRoutes}</div>
+            </div>
+          ) : (
+              <div className={classes.map}>{switchRoutes}</div>
+            )}
+          {getRoute() ? <Footer /> : null}
+        </div>
 
-      <Snackbars></Snackbars>
+        <Snackbars></Snackbars>
 
-      {props.store.isReportDetailDialogOpen &&
+        {props.store.isReportDetailDialogOpen &&
           <DetailDialog />}
 
         {props.store.isDeleteDialogOpen &&
           <DeleteDialog />}
-    </div>
-  );
-}))
+
+        {props.store.isMyReportOpen &&
+          <MyReportDialog 
+            name={props.store.targetUserForDetails.name}
+            reports={props.store.targetUserForDetails.reports} />}
+      </div>
+    );
+  }))
 
 export default Admin
 

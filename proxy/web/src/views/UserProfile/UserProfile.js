@@ -12,6 +12,9 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import { observer, inject } from "mobx-react";
+import { CircularProgress } from "@material-ui/core";
+import Table from "components/Table/Table.js";
 
 import avatar from "assets/img/faces/marc.jpg";
 
@@ -36,11 +39,44 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+const UserProfile = inject("store")(
+  observer((props) => {
+
   const classes = useStyles();
   return (
     <div>
+
       <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>피싱 신고 내역</h4>
+              <p className={classes.cardCategoryWhite}>
+                {`업데이트 - ${new Date().toLocaleDateString()}`}
+              </p>
+            </CardHeader>
+            <CardBody>
+              {props.store.loadingMyReport ?
+                <CircularProgress />
+                :
+                <Table
+                  tableHeaderColor="primary"
+                  tableHead={["신고 도메인", "제목", "사용자", "신고 시각", "삭제"]}
+                  tableData={props.store.myReports.map((rep) => {
+                    return [
+                      rep.id,
+                      rep.spam_domain,
+                      rep.title,
+                      rep.user_id,
+                      new Date(rep.created_time).toLocaleDateString(),
+                    ]
+                  })}
+                />
+              }
+            </CardBody>
+          </Card>
+        </GridItem>
+
         <GridItem xs={12} sm={12} md={8}>
           <Card>
             <CardHeader color="primary">
@@ -175,4 +211,6 @@ export default function UserProfile() {
       </GridContainer>
     </div>
   );
-}
+}))
+
+export default UserProfile

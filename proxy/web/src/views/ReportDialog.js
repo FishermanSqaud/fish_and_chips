@@ -118,7 +118,7 @@ const ReportDialog = inject("store")(
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization" : `Bearer ${props.store.accessToken}`
+							"Authorization": `Bearer ${props.store.accessToken}`
 						},
 						body: JSON.stringify(requestBody)
 					},
@@ -127,6 +127,15 @@ const ReportDialog = inject("store")(
 				console.log("신고 결과 ", response)
 
 				if (response.ok) {
+
+					const accessToken = response.headers.get(
+						"Authorization"
+					)
+
+					this.set(
+						"accessToken",
+						accessToken
+					)
 
 					props.store.set(
 						reportDomain,

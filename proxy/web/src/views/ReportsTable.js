@@ -129,7 +129,7 @@ const ReportsTable = inject("store")(
 
 				<TableBody>
 					{getSlicedRows(
-						props.store.myReports,
+						props.reports,
 						props.store.reportsTablePageNum,
 						props.store.reportsRowsPerPage
 					)
@@ -239,7 +239,7 @@ const ReportsTable = inject("store")(
 						<TablePagination
 							rowsPerPageOptions={rowsPerPageOptions}
 							colSpan={4}
-							count={props.store.myReports.length}
+							count={props.reports.length}
 							rowsPerPage={props.store.reportsRowsPerPage}
 							page={props.store.reportsTablePageNum}
 							SelectProps={{

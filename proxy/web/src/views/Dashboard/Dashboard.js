@@ -39,6 +39,7 @@ import {
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { observer, inject } from "mobx-react";
 import { CircularProgress } from "@material-ui/core";
+import { conditionalExpression } from "@babel/types";
 
 const useStyles = makeStyles(styles);
 
@@ -57,6 +58,24 @@ const Dashboard = inject("store")(
     }, [props.store.loadingMyReport])
 
     const classes = useStyles();
+
+    const handleUserReportOpen = (targetUserId) => (e) => {
+
+      const targetUser = props.store.users.find((user) => {
+        return user.id == targetUserId
+      })
+
+      props.store.set(
+        "targetUserForDetails",
+        targetUser
+      )
+      
+			props.store.set(
+				"isMyReportOpen",
+				true
+      )
+
+    }
 
     return (
       <div>
@@ -281,21 +300,19 @@ const Dashboard = inject("store")(
           <GridItem xs={12} sm={12} md={6}>
             <Card>
               <CardHeader color="warning">
-                <h4 className={classes.cardTitleWhite}>사용자 통계</h4>
+                <h4 className={classes.cardTitleWhite}>사용자 활동 통계</h4>
                 <p className={classes.cardCategoryWhite}>
-                  사용자 활동 통계
+                  신고 횟수 내림차순
               </p>
               </CardHeader>
               <CardBody>
                 <Table
+                  openDetail={handleUserReportOpen}
                   tableHeaderColor="warning"
-                  tableHead={["ID", "이름", "email", "신고 횟수"]}
-                  tableData={[
-                    ["5", "테스트맨", "test@gmail.com", "10"],
-                    ["3", "헬로맨101", "hello@naver.com", "5"],
-                    ["1", "맹클론", "maeng@gmail.com", "3"],
-                    ["9", "테스트100", "test100@gmail.com", "2"]
-                  ]}
+                  tableHead={["이름", "email", "신고 횟수"]}
+                  tableData={
+                    getUserSortedReportCnt(props.store.users)
+                  }
                 />
               </CardBody>
             </Card>
@@ -304,6 +321,36 @@ const Dashboard = inject("store")(
       </div>
     );
   }))
+
+  const getUserSortedReportCnt = (users) => {
+
+    const refinedUsers = users.map((user) => {
+      return {
+        ...user,
+        reportCnt : user.reports.length
+      }
+    })
+
+    refinedUsers.sort((a, b)=>{
+      if (a.reportCnt < b.reportCnt){
+        return 1
+      } else if (a.reportCnt > b.reportCnt){
+        return -1
+      }else {
+        return 0
+      }
+    })
+
+    return refinedUsers.map((user)=>{
+      return [
+        user.id,
+        user.name,
+        user.email,
+        user.reportCnt
+      ]
+    })
+
+  }
 
 export default Dashboard
 
