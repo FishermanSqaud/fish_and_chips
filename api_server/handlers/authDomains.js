@@ -119,8 +119,12 @@ exports.registerAuthDomain = async (req, res) => {
 			return
 		}
 
-		// TO-DO : 관리자인지 확인
+		if (!tokenResult.isAdmin){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("접근 권한이 없습니다")
 
+			return
+		}
 
 		var conn = await db.getConn()
 
@@ -213,7 +217,12 @@ exports.updateAuthDomain = async (req, res) => {
 			return
 		}
 
-		// TO-DO : 관리자인지 확인
+		if (!tokenResult.isAdmin){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("접근 권한이 없습니다")
+
+			return
+		}
 
 		if (!isAuthDomainUpdateInfoSent(req)){
 	
@@ -293,7 +302,12 @@ exports.deleteReport = async (req, res) => {
 			return
 		}
 
-		// TO-DO : 관리자인지 확인
+		if (!tokenResult.isAdmin){
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("접근 권한이 없습니다")
+
+			return
+		}
 
 
 		var conn = await db.getConn()
