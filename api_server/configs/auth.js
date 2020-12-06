@@ -44,7 +44,8 @@ exports.checkToken = async (token) => {
             return {
                 status: true,
                 email: decoded.email,
-                userId : decoded.userId
+                userId : decoded.userId,
+                isAdmin : decoded.isAdmin
             }
 
         } else {

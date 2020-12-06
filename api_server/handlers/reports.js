@@ -108,12 +108,16 @@ exports.getReports = async (req, res) => {
 
 		var conn = await db.getConn()
 
-		const userParams = [
-			tokenResult.userId
-		]
+		var userParams = []
+		var query = db.query.report.get
+
+		if (tokenResult.isAdmin){
+			userParams.push(tokenResult.userId)
+			query = db.query.report.getAll
+		}
 		
 		const result = await conn.sendQuery(
-			db.query.report.get,
+			query,
 			userParams
 		)
 

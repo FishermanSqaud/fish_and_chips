@@ -122,24 +122,12 @@ const AdminNavbarLinks = inject("store")(
                   <Paper>
                     <ClickAwayListener onClickAway={handleCloseProfile}>
                       <MenuList role="menu">
-                        <MenuItem
-                          onClick={handleCloseProfile}
-                          className={classes.dropdownItem}
-                        >
-                          Profile
-                    </MenuItem>
-                        <MenuItem
-                          onClick={handleCloseProfile}
-                          className={classes.dropdownItem}
-                        >
-                          Settings
-                    </MenuItem>
                         <Divider light />
                         <MenuItem
                           onClick={handleCloseProfile}
                           className={classes.dropdownItem}
                         >
-                          Logout
+                          로그아웃
                     </MenuItem>
                       </MenuList>
                     </ClickAwayListener>

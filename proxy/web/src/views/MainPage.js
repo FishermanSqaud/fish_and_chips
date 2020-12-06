@@ -148,14 +148,14 @@ const MainPage = inject("store")(
                       width: '16%'
                     }}
                     variant="contained"
-                    color="primary">
+                    >
                     관리자 페이지
                 </Button>
                 </Link>
                 :
                 null
               }
-              
+
             </div>
 
 

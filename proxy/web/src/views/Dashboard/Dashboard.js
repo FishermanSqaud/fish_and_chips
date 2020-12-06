@@ -37,10 +37,13 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { observer, inject } from "mobx-react";
 
 const useStyles = makeStyles(styles);
 
-export default function Dashboard() {
+const Dashboard = inject("store")(
+	observer((props) => {
+    
   const classes = useStyles();
   return (
     <div>
@@ -74,7 +77,9 @@ export default function Dashboard() {
                 <ReportProblemOutlinedIcon></ReportProblemOutlinedIcon>
               </CardIcon>
               <p className={classes.cardCategory}>신고 내역</p>
-              <h3 className={classes.cardTitle}>8</h3>
+              <h3 className={classes.cardTitle}>
+                {props.store.myReports.length}
+              </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -209,9 +214,9 @@ export default function Dashboard() {
                 tabIcon: BugReport,
                 tabContent: (
                   <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
+                    checkedIndexes={[]}
+                    tasksIndexes={[0, 1, 2, 3, 4, 5, 6]}
+                    tasks={props.store.myReports.map((rep)=>rep.spam_domain)}
                   />
                 )
               },
@@ -266,4 +271,6 @@ export default function Dashboard() {
       </GridContainer>
     </div>
   );
-}
+}))
+
+export default Dashboard

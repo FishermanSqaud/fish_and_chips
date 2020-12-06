@@ -18,6 +18,7 @@ exports.query = {
     report : {
         getWithDomain : 'select * from reports where spam_domain = ?',
         get : "select * from reports where user_id = ?",
+        getAll : "select * from reports",
         create : 'insert into reports (spam_domain, user_id, title, content) values (?, ?, ?, ?)',
         update : 'update reports SET title=?, content=? where id=?',
         delete : 'delete from reports where id = ?'

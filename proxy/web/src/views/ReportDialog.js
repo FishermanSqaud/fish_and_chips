@@ -17,7 +17,7 @@ const ETC = 2
 
 const ENTER_KEY_CODE = 13
 
-const CreateDialog = inject("store")(
+const ReportDialog = inject("store")(
 	observer((props) => {
 		const [inputType, setInputType] = useState(PAYMENT)
 
@@ -303,7 +303,7 @@ const CreateDialog = inject("store")(
 		)
 	}))
 
-export default CreateDialog
+export default ReportDialog
 
 const showCreatedTime = (date) => {
 	return date.toLocaleDateString() + " " + date.toLocaleTimeString()

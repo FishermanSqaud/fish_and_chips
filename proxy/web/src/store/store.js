@@ -93,6 +93,8 @@ class Store {
 
       const responseJson = await response.json()
 
+      responseJson.reports.sort(this.compareCreateTime)
+
       this.set(
         "myReports",
         responseJson.reports
@@ -104,6 +106,25 @@ class Store {
       return false
     }
   }
+
+  
+  compareCreateTime = (contentA, contentB, isAscend = false) => {
+    if (isAscend) {
+      return new Date(contentB.created_time) <
+        new Date(contentA.created_time)
+        ? 1
+        : new Date(contentB.created_time) > new Date(contentA.created_time)
+        ? -1
+        : 0;
+    } else {
+      return new Date(contentB.created_time) >
+        new Date(contentA.created_time)
+        ? 1
+        : new Date(contentB.created_time) < new Date(contentA.created_time)
+        ? -1
+        : 0;
+    }
+  };
 
   signIn = async (body) => {
 
