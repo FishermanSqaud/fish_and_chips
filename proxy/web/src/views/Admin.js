@@ -10,10 +10,11 @@ import routes from "./routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-2.jpg";
+import bgImage from "assets/img/squad_1.jpg";
 import logo from "assets/img/fish_and_chips_icon_48.png";
 import { observer, inject } from "mobx-react";
 import {useHistory} from 'react-router-dom'
+import Snackbars from "./Snackbars.js";
 
 
 const Admin = inject("store")(
@@ -68,6 +69,12 @@ const Admin = inject("store")(
     }
 
     props.store.getMyReports()
+
+    // 30초마다 새로 불러오기
+    setInterval(()=>{
+      props.store.getMyReports()
+    }, 1000 * 30)
+
   }, [])
 
   return (
@@ -98,6 +105,8 @@ const Admin = inject("store")(
         )}
         {getRoute() ? <Footer /> : null}
       </div>
+
+      <Snackbars></Snackbars>
     </div>
   );
 }))

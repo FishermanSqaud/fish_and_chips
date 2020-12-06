@@ -16,26 +16,9 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteDialog from "./DeleteDialog";
 import DetailDialog from "./DetailDialog";
 
-// require('dotenv').config();
-
-const PAYMENT = 0
-const PERSONAL_INFO = 1
-const ETC = 2
-
-const ENTER_KEY_CODE = 13
 
 const MyReportDialog = inject("store")(
 	observer((props) => {
-		const [inputType, setInputType] = useState(PAYMENT)
-
-		const [reportDomain, setReportDomain] = useState(props.store.reportDomain)
-		const [inputTitle, setInputTitle] = useState("")
-		const [inputContent, setInputContent] = useState("")
-
-		const [domainErr, setDomainErr] = useState(false)
-		const [inputTitleErr, setInputTitleErr] = useState(false)
-		const [inputContentErr, setInputContentErr] = useState(false)
-
 
 		const [isLoading, setIsLoading] = useState(true)
 

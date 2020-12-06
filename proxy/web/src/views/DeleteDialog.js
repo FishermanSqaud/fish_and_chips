@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { observer, inject } from "mobx-react";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,6 +10,24 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const DeleteDialog = inject("store")(
 	observer((props) => {
+
+		useEffect(() => {
+			const ENTER_KEY_CODE = 13
+			
+			const enterSubmit = (e) => {
+				if (e.keyCode == ENTER_KEY_CODE) {
+					const submitBtn = document.getElementById("submit")
+					submitBtn.click()
+				}
+			}
+
+			window.addEventListener('keyup', enterSubmit)
+
+			return function cleanup() {
+				window.removeEventListener('keyup', enterSubmit)
+			}
+
+		}, [])
 
 		const handleClose = () => {
 			props.store.set(
@@ -129,6 +147,7 @@ const DeleteDialog = inject("store")(
 								취소
               </Button>
 							<Button
+								id="submit"
 								onClick={handleLocationDelete}
 								color="primary"
 								autoFocus>

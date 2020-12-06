@@ -70,7 +70,14 @@ const tableStyle = theme => ({
     color: "inherit",
     display: "table-row",
     outline: "none",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
+    cursor : "pointer",
+    transition: "all 0.9s, color 0.3",
+    '&:hover' : {
+      color:"#fff",
+      boxShadow: "0 80px 0 0 rgba(0,0,0,0.05) inset, 0 -80px 0 0 rgba(0,0,0,0.05) inset"
+
+    }
   }
 });
 

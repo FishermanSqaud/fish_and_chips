@@ -12,6 +12,8 @@ import TextField from "@material-ui/core/TextField"
 const DetailDialog = inject("store")(
 	observer((props) => {
 
+		const [isEditMode, setIsEditMode] = useState(false)
+
 		let report = props.store.myReports.find(rep => {
 			return rep.id == props.store.detailReportId
 		})
@@ -24,6 +26,33 @@ const DetailDialog = inject("store")(
 		const isOkToRequestUpdate = () => {
 
 			return (inputTitle != "") && (inputContent != "")
+		}
+
+		const ENTER_KEY_CODE = 13
+
+		const enterSubmit = (e) => {
+			if (e.keyCode == ENTER_KEY_CODE) {
+				const submitBtn = document.getElementById("submit")
+				submitBtn.click()
+			}
+		}
+
+		useEffect(() => {
+
+			if (isEditMode) {
+				window.addEventListener('keyup', enterSubmit)
+			} else {
+				window.removeEventListener('keyup', enterSubmit)
+			}
+
+			return function cleanup() {
+				window.removeEventListener('keyup', enterSubmit)
+			}
+
+		}, [isEditMode])
+
+		const switchToEditMode = () => {
+			setIsEditMode(!isEditMode)
 		}
 
 		const handleUpdateReport = async () => {
@@ -39,8 +68,8 @@ const DetailDialog = inject("store")(
 				}
 
 				const requestBody = {
-					title : inputTitle,
-					content : inputContent
+					title: inputTitle,
+					content: inputContent
 				}
 
 				const response = await fetch(
@@ -49,7 +78,7 @@ const DetailDialog = inject("store")(
 						method: "PATCH",
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization" : `Bearer ${props.store.accessToken}`
+							"Authorization": `Bearer ${props.store.accessToken}`
 						},
 						body: JSON.stringify(requestBody)
 					},
@@ -68,6 +97,8 @@ const DetailDialog = inject("store")(
 						"snackbarInfoOpen",
 						true
 					)
+
+					switchToEditMode()
 
 				} else {
 
@@ -153,6 +184,7 @@ const DetailDialog = inject("store")(
 
 						<div>
 							<TextField
+								disabled={!isEditMode}
 								required
 								className={classes.textFieldElse}
 								id="standard-required"
@@ -167,6 +199,7 @@ const DetailDialog = inject("store")(
 						</div>
 						<div>
 							<TextField
+								disabled={!isEditMode}
 								required
 								id="standard-number"
 								className={classes.textFieldElse}
@@ -189,11 +222,20 @@ const DetailDialog = inject("store")(
 						닫기
         			</Button>
 
-					<Button
-						className={classes.button}
-						onClick={handleUpdateReport}>
-						수정
-        			</Button>
+					{isEditMode ?
+						<Button
+							id="submit"
+							className={classes.button}
+							onClick={handleUpdateReport}>
+							저장
+        				</Button>
+						:
+						<Button
+							className={classes.button}
+							onClick={switchToEditMode}>
+							수정
+						</Button>
+					}
 				</DialogActions>
 			</Dialog>
 		)

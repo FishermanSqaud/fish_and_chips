@@ -47,50 +47,6 @@ const Dashboard = inject("store")(
 
     const [lastReportDate, setLastReportDate] = useState(new Date())
 
-    const dateDiffInDays = (a, b) => {
-
-      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-      const MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-      return Math.floor((utc2 - utc1) / MS_PER_DAY);
-    }
-
-    const arrayRotate = (arr, count) => {
-      count -= arr.length * Math.floor(count / arr.length);
-      arr.push.apply(arr, arr.splice(0, count));
-      return arr;
-    }
-
-    const getReportCntInWeek = (reports) => {
-      const curDate = new Date()
-
-      let labels = ["일", "월", "화", "수", "목", "금", "토"]
-
-      labels[curDate.getDay()] += "\n(오늘)"
-
-      const reportsCnt = reports.reduce((total, rep) => {
-
-        const repDate = new Date(rep.created_time)
-        const daysDiff = dateDiffInDays(curDate, repDate)
-
-        if (daysDiff <= 7) {
-          total[repDate.getDay()] += 1
-        }
-
-        return total
-
-      }, [0, 0, 0, 0, 0, 0, 0])
-
-      const series = arrayRotate(reportsCnt, 7 - (6 - curDate.getDay()))
-      const rotatedLabels = arrayRotate(labels, 7 - (6 - curDate.getDay()))
-
-      return {
-        labels: rotatedLabels,
-        series: [series]
-      }
-    }
-
     useEffect(() => {
 
       if (!props.store.loadingMyReport && props.store.myReports.length > 0) {
@@ -101,6 +57,7 @@ const Dashboard = inject("store")(
     }, [props.store.loadingMyReport])
 
     const classes = useStyles();
+
     return (
       <div>
         <GridContainer>
@@ -206,7 +163,7 @@ const Dashboard = inject("store")(
 
               <CardFooter chart>
                 <div className={classes.stats}>
-                  <AccessTime /> updated 4 minutes ago
+                  <AccessTime /> updated 2 days ago
               </div>
               </CardFooter>
 
@@ -240,7 +197,7 @@ const Dashboard = inject("store")(
 
               <CardFooter chart>
                 <div className={classes.stats}>
-                  <AccessTime /> updated 2 days ago
+                  <AccessTime /> 실시간 반영 중
               </div>
               </CardFooter>
 
@@ -348,3 +305,50 @@ const Dashboard = inject("store")(
   }))
 
 export default Dashboard
+
+
+const dateDiffInDays = (a, b) => {
+
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  return Math.floor((utc2 - utc1) / MS_PER_DAY);
+}
+
+
+const arrayRotate = (arr, count) => {
+  count -= arr.length * Math.floor(count / arr.length);
+  arr.push.apply(arr, arr.splice(0, count));
+  return arr;
+}
+
+
+const getReportCntInWeek = (reports) => {
+  const curDate = new Date()
+
+  let labels = ["일", "월", "화", "수", "목", "금", "토"]
+
+  labels[curDate.getDay()] += "\n(오늘)"
+
+  const reportsCnt = reports.reduce((total, rep) => {
+
+    const repDate = new Date(rep.created_time)
+    const daysDiff = dateDiffInDays(curDate, repDate)
+
+    if (daysDiff <= 7) {
+      total[repDate.getDay()] += 1
+    }
+
+    return total
+
+  }, [0, 0, 0, 0, 0, 0, 0])
+
+  const series = arrayRotate(reportsCnt, 7 - (6 - curDate.getDay()))
+  const rotatedLabels = arrayRotate(labels, 7 - (6 - curDate.getDay()))
+
+  return {
+    labels: rotatedLabels,
+    series: [series]
+  }
+}

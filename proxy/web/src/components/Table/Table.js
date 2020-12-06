@@ -15,11 +15,17 @@ const useStyles = makeStyles(styles);
 export default function CustomTable(props) {
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
+
+  const openDetail = "openDetail" in props ? props.openDetail : () => {}
+  const startIdx = "openDetail" in props ? 1 : 0
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
+
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
+
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
@@ -32,22 +38,31 @@ export default function CustomTable(props) {
                 );
               })}
             </TableRow>
+
           </TableHead>
         ) : null}
+
         <TableBody>
-          {tableData.map((prop, key) => {
+
+          {tableData.map((row, key) => {
             return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                {prop.map((prop, key) => {
+              <TableRow
+                onClick={openDetail(row[startIdx - 1])}
+                key={key}
+                className={classes.tableBodyRow}>
+                  
+                {row.slice(startIdx).map((prop, key) => {
                   return (
                     <TableCell className={classes.tableCell} key={key}>
                       {prop}
                     </TableCell>
                   );
                 })}
+
               </TableRow>
             );
           })}
+
         </TableBody>
       </Table>
     </div>

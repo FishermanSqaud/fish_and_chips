@@ -8,6 +8,97 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import { observer, inject } from "mobx-react";
+import { CircularProgress, IconButton } from "@material-ui/core";
+import DetailDialog from '../DetailDialog'
+import DeleteDialog from '../DeleteDialog'
+import DeleteIcon from '@material-ui/icons/Delete';
+
+
+
+const TableList = inject("store")(
+  observer((props) => {
+
+    const classes = useStyles();
+
+    const handleOpenDetail = (targetRepId) => () => {
+
+      props.store.set(
+        "detailReportId",
+        targetRepId
+      )
+
+      props.store.set(
+        "isReportDetailDialogOpen",
+        true
+      )
+    }
+
+    const handleOpenDeleteDialog = (targetReport) => (e) => {
+
+      e.stopPropagation()
+
+			props.store.set(
+				"deleteReport",
+				targetReport
+			)
+
+			props.store.set(
+				"isDeleteDialogOpen",
+				true
+      )
+		}
+
+    return (
+      <React.Fragment>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>피싱 신고 내역</h4>
+                <p className={classes.cardCategoryWhite}>
+                  {`업데이트 - ${new Date().toLocaleDateString()}`}
+                </p>
+              </CardHeader>
+              <CardBody>
+                {props.store.loadingMyReport ?
+                  <CircularProgress />
+                  :
+                  <Table
+                    openDetail={handleOpenDetail}
+                    tableHeaderColor="primary"
+                    tableHead={["신고 도메인", "제목", "사용자", "신고 시각", "삭제"]}
+                    tableData={props.store.myReports.map((rep) => {
+                      return [
+                        rep.id,
+                        rep.spam_domain,
+                        rep.title,
+                        rep.user_id,
+                        new Date(rep.created_time).toLocaleDateString(),
+                        <IconButton onClick={handleOpenDeleteDialog(rep)}>
+                          <DeleteIcon ></DeleteIcon>
+                        </IconButton>
+                      ]
+                    })}
+                  />
+                }
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
+
+        {props.store.isReportDetailDialogOpen &&
+          <DetailDialog />}
+
+        {props.store.isDeleteDialogOpen &&
+          <DeleteDialog />}
+
+      </React.Fragment>
+
+    );
+  }))
+
+export default TableList
 
 const styles = {
   cardCategoryWhite: {
@@ -40,73 +131,3 @@ const styles = {
 };
 
 const useStyles = makeStyles(styles);
-
-export default function TableList() {
-  const classes = useStyles();
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
-            <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"]
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card plain>
-          <CardHeader plain color="primary">
-            <h4 className={classes.cardTitleWhite}>
-              Table on Plain Background
-            </h4>
-            <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"],
-                ["2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"],
-                ["3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"],
-                [
-                  "4",
-                  "Philip Chaney",
-                  "$38,735",
-                  "Korea, South",
-                  "Overland Park"
-                ],
-                [
-                  "5",
-                  "Doris Greene",
-                  "$63,542",
-                  "Malawi",
-                  "Feldkirchen in Kärnten"
-                ],
-                ["6", "Mason Porter", "$78,615", "Chile", "Gloucester"]
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
-}

@@ -86,23 +86,6 @@ const ReportsTable = inject("store")(
 			)
 		}
 
-		// const getFilteredReports = (locations, filterType, search) => {
-		// 	return locations.filter((row) => {
-		// 		switch (filterType) {
-		// 			case props.store.FILTER_ALL:
-		// 				return true
-
-		// 			default:
-		// 				return row.type == filterType
-		// 		}
-		// 	}).filter(row => {
-		// 		if (search == "") {
-		// 			return true
-		// 		} else {
-		// 			return row.message.toLowerCase().indexOf(search) > -1
-		// 		}
-		// 	})
-		// }
 		const columns = [
 			{ label: '번호', align: 'center', width: 'unset' },
 			{ label: '신고 도메인', align: 'left', width: 300 },
