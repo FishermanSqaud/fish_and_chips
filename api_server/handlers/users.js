@@ -18,7 +18,7 @@ const isEmailDuplicate = async (email) => {
 			userParams
 		)
 
-		if (result.results.length > 0){
+		if (result.results.length > 0) {
 			return true
 		}
 
@@ -123,15 +123,15 @@ exports.signIn = async (req, res) => {
 			db.query.user.getWithPwd,
 			userParams
 		)
- 
+
 		if (isUserExist(result)) {
 
 			const user = result.results[0]
 
 			const payload = {
 				email: req.body.email,
-				userId : user.id,
-				isAdmin : user.is_admin
+				userId: user.id,
+				isAdmin: user.is_admin
 			}
 
 			const token = await auth.publishJwt(payload)
@@ -188,4 +188,90 @@ const isSignInInfoSent = (req) => {
 
 	return (('email' in req.body && req.body.email != '')
 		&& ('password' in req.body && req.body.password != ''))
+}
+
+
+// GET
+exports.getUsers = async (req, res) => {
+
+	try {
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.TEXT
+		)
+
+		if (!auth.isAccessTokenSent(req)) {
+
+			res.status(consts.STATUS_CODE.BAD_REQUEST)
+				.send("토큰 미전송")
+
+			return
+		}
+
+		var token = req.header(consts.HEADER.AUTH)
+
+		const tokenResult = await auth.checkToken(token)
+
+		if (!tokenResult.status) {
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("토큰 에러")
+
+			return
+		}
+
+
+		if (!tokenResult.isAdmin) {
+			res.status(consts.STATUS_CODE.UNAUTHORIZED)
+				.send("접근 권한이 없습니다")
+
+			return
+		}
+
+		console.log("관리자 - 사용자 가져오기")
+
+		var conn = await db.getConn()
+
+		const result = await conn.sendQuery(
+			db.query.user.getAll,
+			[],
+			false
+		)
+
+		const users = result.results
+
+		const fetchReportsPromises = users.map((user) => conn.sendQuery(
+			db.query.report.get,
+			[user.id],
+			false
+		))
+
+		const results = await Promise.all(fetchReportsPromises)
+
+		// Must Release connection after use
+		conn.release()
+
+		res.setHeader(
+			consts.HEADER.CONTENT_TYPE,
+			consts.HEADER.JSON
+		)
+
+		res.status(consts.STATUS_CODE.OK)
+			.send(JSON.stringify({
+				users: users.map((user, idx) => {
+					return {
+						...user,
+						reports : results[idx].results
+					}
+				})
+			}))
+
+
+	} catch (e) {
+
+		console.log("error - ", e)
+
+		res.status(consts.STATUS_CODE.SERVER_INTERNAL_ERROR)
+			.send("서버 오류")
+	}
 }

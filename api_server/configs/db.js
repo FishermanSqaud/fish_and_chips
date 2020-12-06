@@ -12,6 +12,7 @@ exports.query = {
     user : {
         create : `insert into users (email, password, name) values (?, ?, ?)`,
         get :  `select * from users where email = ?`,
+        getAll : 'select * from users',
         getWithPwd : `select * from users where email = ? and password = ?`,
         delete : `delete from users where email = ?`
     },
@@ -28,6 +29,9 @@ exports.query = {
         create : 'insert into authenticated_domains (domain) values (?)',
         update : 'update authenticated_domains SET domain=? where id=?',
         delete : 'delete from authenticated_domains where id = ?'
+    },
+    userWithReports : {
+        get : 'select * from users join reports on users.id = reports.user_id'
     }
 }
 
@@ -45,7 +49,7 @@ exports.getConn = () => new Promise((res, rej)=>{
     })
 })
 
-const sendQuery = (conn) => (query, params) => {
+const sendQuery = (conn) => (query, params, connRelease = true) => {
     return new Promise((res, rej) => {
         const queryInfo = {
             sql: query,
@@ -60,7 +64,10 @@ const sendQuery = (conn) => (query, params) => {
                 return
             }
 
-            conn.release()
+            if (connRelease){
+                conn.release()
+            }
+            
             res({
                 results: results,
                 fields: fields
