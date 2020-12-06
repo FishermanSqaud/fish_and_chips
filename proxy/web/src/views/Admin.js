@@ -62,10 +62,10 @@ const Admin = inject("store")(
       props.store.getUsers()
 
       // 30초마다 새로 불러오기
-      // setInterval(() => {
-      //   props.store.getMyReports()
-      //   props.store.getUsers()
-      // }, 1000 * 30)
+      setInterval(() => {
+        props.store.getMyReports()
+        props.store.getUsers()
+      }, 1000 * 30)
 
     }, [])
 

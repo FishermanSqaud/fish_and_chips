@@ -265,7 +265,11 @@ const Dashboard = inject("store")(
                   tabContent: (
                     <Tasks
                       checkedIndexes={[]}
-                      tasksIndexes={[0, 1, 2, 3, 4, 5, 6]}
+                      tasksIndexes={props.store.myReports.length >= 6 ?
+                      [0, 1, 2, 3, 4, 5, 6]
+                      :
+                      props.store.myReports.map((rep, idx)=> idx)
+                      }
                       tasks={props.store.myReports.map((rep) => rep)}
                       contentKey={"spam_domain"}
                     />
