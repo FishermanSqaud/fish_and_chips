@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import Navbar from "../components/Navbars/Navbar.js";
-import Footer from "../components/Footers/Footer";
-import Sidebar from "../components/Sidebar/Sidebar.js";
-import routes from "./routes.js";
+import Navbar from "../../components/Navbars/Navbar.js";
+import Footer from "../../components/Footers/Footer";
+import Sidebar from "../../components/Sidebar/Sidebar.js";
+import AdminPageRoutes from "./AdminPageRoutes.js";
 import { observer, inject } from "mobx-react";
 import { useHistory } from 'react-router-dom'
-import Snackbars from "./Snackbars.js";
-import ReportDetailDialog from './ReportDetailDialog'
-import DeleteReportDialog from './DeleteReportDialog'
-import MyReportDialog from './MyReportDialog'
+import Snackbars from "../../components/Snackbars/Snackbars.js";
+import ReportDetailDialog from '../Dialog/ReportDetailDialog'
+import DeleteReportDialog from '../Dialog/DeleteReportDialog'
+import MyReportDialog from '../Dialog/MyReportDialog'
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/squad_1.jpg";
@@ -65,7 +65,7 @@ const AdminPage = inject("store")(
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={routes}
+          AdminPageRoutes={AdminPageRoutes}
           logoText={"피쉬 앤 칩스 관리자"}
           logo={logo}
           image={image}
@@ -76,7 +76,7 @@ const AdminPage = inject("store")(
         />
         <div className={classes.mainPanel} ref={mainPanel}>
           <Navbar
-            routes={routes}
+            AdminPageRoutes={AdminPageRoutes}
             handleDrawerToggle={handleDrawerToggle}
             {...props}
           />
@@ -109,7 +109,7 @@ export default AdminPage
 
 const switchRoutes = (
   <Switch>
-    {routes.map((prop, key) => {
+    {AdminPageRoutes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
           <Route

@@ -3,8 +3,8 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 // core components/views for AdminPage layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import AdminUsersPage from "views/AdminUsersPage.js";
-import AdminReportsPage from "views/AdminReportsPage.js";
+import AdminUsersPage from "./AdminUsersPage.js";
+import AdminReportsPage from "./AdminReportsPage.js";
 
 // core components/views for RTL layout
 

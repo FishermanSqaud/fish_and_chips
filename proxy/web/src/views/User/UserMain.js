@@ -4,7 +4,7 @@ import { Button } from "@material-ui/core";
 import { observer, inject } from "mobx-react";
 import { Link } from 'react-router-dom'
 
-const MainPage = inject("store")(
+const UserMain = inject("store")(
   observer((props) => {
 
     let pageHeader = React.createRef();
@@ -200,7 +200,7 @@ const MainPage = inject("store")(
     );
   }))
 
-export default MainPage;
+export default UserMain;
 
 
 const useStyles = makeStyles(theme => ({

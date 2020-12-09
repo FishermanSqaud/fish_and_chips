@@ -12,10 +12,12 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import backgroundImage from '../assets/img/squad_1.jpg'
+import backgroundImage from '../../assets/img/squad_1.jpg'
 import { observer, inject } from "mobx-react";
-import Snackbars from 'views/Snackbars'
+import Snackbars from '../../components/Snackbars/Snackbars'
 import { useHistory } from "react-router-dom";
+
+const riotPoliceImg = require("../../assets/img/riot-police.png")
 
 const ENTER_KEY_CODE = 13
 
@@ -153,7 +155,7 @@ const LoginPage = inject("store")(
 							<Avatar className={classes.avatar}>
 								<img
 									className={classes.icon}
-									src={require("../assets/img/riot-police.png")}
+									src={riotPoliceImg}
 								/>
 							</Avatar>
 

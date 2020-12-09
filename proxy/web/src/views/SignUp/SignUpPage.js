@@ -12,9 +12,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { observer, inject } from "mobx-react";
-import Snackbars from 'views/Snackbars'
+import Snackbars from '../../components/Snackbars/Snackbars'
 import { useHistory } from "react-router-dom";
 
+const riotPoliceImg = require('../../assets/img/riot-police.png');
 const ENTER_KEY_CODE = 13
 
 const SignUp = inject("store")(
@@ -168,7 +169,7 @@ const SignUp = inject("store")(
             <Avatar className={classes.avatar}>
               <img
                 className={classes.icon}
-                src={require('../assets/img/riot-police.png')}></img>
+                src={riotPoliceImg}></img>
             </Avatar>
             <Typography component="h1" variant="h5">
               피쉬앤칩스 회원가입

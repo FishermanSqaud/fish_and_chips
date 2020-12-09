@@ -15,12 +15,12 @@ import CardFooter from "components/Card/CardFooter.js";
 import { observer, inject } from "mobx-react";
 import { CircularProgress, TextField } from "@material-ui/core";
 import Table from "components/Table/Table.js";
-import ReportsTable from "./ReportsTable"
+import ReportsTable from "../ReportsTable/ReportsTable"
 
 import boyAvatar from "assets/img/boy.png";
 import girlAvatar from "assets/img/girl.png"
 
-import DeleteUserDialog from "views/DeleteUserDialog";
+import DeleteUserDialog from "views/Dialog/DeleteUserDialog";
 
 const styles = {
   cardCategoryWhite: {

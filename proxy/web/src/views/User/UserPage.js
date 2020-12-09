@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import MainPage from "./MainPage.js";
+import UserMain from "./UserMain.js";
 import { observer, inject } from "mobx-react";
 import { makeStyles } from '@material-ui/core/styles';
-import Snackbars from './Snackbars'
-import CreateReportDialog from './CreateReportDialog'
-import LogoutDialog from './LogoutDialog'
-import MyReportDialog from "./MyReportDialog.js";
-import DeleteReportDialog from "./DeleteReportDialog";
-import ReportDetailDialog from "./ReportDetailDialog";
+import Snackbars from '../../components/Snackbars/Snackbars'
+import CreateReportDialog from '../Dialog/CreateReportDialog'
+import LogoutDialog from '../Dialog/LogoutDialog'
+import MyReportDialog from "../Dialog/MyReportDialog.js";
+import DeleteReportDialog from "../Dialog/DeleteReportDialog";
+import ReportDetailDialog from "../Dialog/ReportDetailDialog";
 import { CircularProgress } from "@material-ui/core";
 import {useHistory} from 'react-router-dom'
 
 
-const Index = inject("store")(
+const UserPage = inject("store")(
   observer((props) => {
     const classes = useStyles()
     const history = useHistory()
@@ -47,7 +47,7 @@ const Index = inject("store")(
       <React.Fragment>
 
         <div className={classes.wrapper}>
-          <MainPage />
+          <UserMain />
 
           {props.store.isReportDialogOpen &&
             <CreateReportDialog />}
@@ -75,7 +75,7 @@ const Index = inject("store")(
     );
   }))
 
-export default Index;
+export default UserPage;
 
 
 const useStyles = makeStyles(theme => ({

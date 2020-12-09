@@ -27,13 +27,13 @@ export default function Sidebar(props) {
     return window.location.href.indexOf(routeName) > -1 ? true : false;
   }
 
-  const { color, logo, image, logoText, routes } = props;
+  const { color, logo, image, logoText, AdminPageRoutes } = props;
 
   var links = (
 
     <List className={classes.list}>
 
-      {routes.map((prop, key) => {
+      {AdminPageRoutes.map((prop, key) => {
 
         var activePro = " ";
         var listItemClasses;
@@ -169,6 +169,6 @@ Sidebar.propTypes = {
   logo: PropTypes.string,
   image: PropTypes.string,
   logoText: PropTypes.string,
-  routes: PropTypes.arrayOf(PropTypes.object),
+  AdminPageRoutes: PropTypes.arrayOf(PropTypes.object),
   open: PropTypes.bool
 };

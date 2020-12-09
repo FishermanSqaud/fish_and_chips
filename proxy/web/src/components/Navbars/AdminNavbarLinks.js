@@ -20,7 +20,7 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { observer, inject } from "mobx-react";
-import LogoutDialog from '../../views/LogoutDialog'
+import LogoutDialog from '../../views/Dialog/LogoutDialog'
 
 const useStyles = makeStyles(styles);
 
