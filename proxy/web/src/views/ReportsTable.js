@@ -7,7 +7,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button'
-import TablePaginationAction from './index-sections/TablePaginationAction'
+import TablePaginationAction from './TablePaginationAction'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ImageIcon from '@material-ui/icons/Image';

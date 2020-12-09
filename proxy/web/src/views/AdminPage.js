@@ -5,13 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Navbar from "../components/Navbars/Navbar.js";
 import Footer from "../components/Footers/Footer";
 import Sidebar from "../components/Sidebar/Sidebar.js";
-
 import routes from "./routes.js";
-
-import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
-
-import bgImage from "assets/img/squad_1.jpg";
-import logo from "assets/img/fish_and_chips_icon_48.png";
 import { observer, inject } from "mobx-react";
 import { useHistory } from 'react-router-dom'
 import Snackbars from "./Snackbars.js";
@@ -19,19 +13,20 @@ import ReportDetailDialog from './ReportDetailDialog'
 import DeleteReportDialog from './DeleteReportDialog'
 import MyReportDialog from './MyReportDialog'
 
-const Admin = inject("store")(
+import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import bgImage from "assets/img/squad_1.jpg";
+import logo from "assets/img/fish_and_chips_icon_48.png";
+
+const AdminPage = inject("store")(
   observer((props) => {
 
     // styles
     const classes = useStyles();
     const history = useHistory()
 
-    // ref to help us initialize PerfectScrollbar on windows devices
     const mainPanel = React.createRef();
-    // states and functions
     const [image, setImage] = React.useState(bgImage);
     const [color, setColor] = React.useState("blue");
-    const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
@@ -86,8 +81,6 @@ const Admin = inject("store")(
             {...props}
           />
 
-          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-
           <div className={classes.content}>
             <div className={classes.container}>{switchRoutes}</div>
           </div>
@@ -111,7 +104,7 @@ const Admin = inject("store")(
     );
   }))
 
-export default Admin
+export default AdminPage
 
 
 const switchRoutes = (

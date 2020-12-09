@@ -8,7 +8,7 @@ import SignUpPage from "views/SignUpPage"
 
 import { Provider } from "mobx-react";
 import Store from './store/store';
-import Admin from "./views/Admin"
+import AdminPage from "./views/AdminPage"
 
 import "assets/css/material-dashboard-react.css?v=1.9.0";
 
@@ -19,7 +19,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Switch>
-          <Route path="/admin" render={props => <Admin {...props} />} />
+          <Route path="/admin" render={props => <AdminPage {...props} />} />
           <Route path="/signUp" render={props => <SignUpPage {...props} />} />
           <Route path="/signIn" render={props => <LoginPage {...props}/>} />
           <Route path="/" render={props => <Index {...props} />} />

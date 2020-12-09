@@ -15,7 +15,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import { observer, inject } from "mobx-react";
 import { CircularProgress, TextField } from "@material-ui/core";
 import Table from "components/Table/Table.js";
-import ReportsTable from "../ReportsTable"
+import ReportsTable from "./ReportsTable"
 
 import boyAvatar from "assets/img/boy.png";
 import girlAvatar from "assets/img/girl.png"
@@ -43,7 +43,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const UserProfile = inject("store")(
+const AdminUsersPage = inject("store")(
   observer((props) => {
 
     const classes = useStyles();
@@ -187,4 +187,4 @@ const UserProfile = inject("store")(
     );
   }))
 
-export default UserProfile
+export default AdminUsersPage

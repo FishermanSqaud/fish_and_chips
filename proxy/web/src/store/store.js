@@ -31,7 +31,7 @@ class Store {
 
     this.myReports = []
 
-    // For Admin
+    // For AdminPage
     this.users = []
     this.targetUserForDetails = {}
     this.isUserDetailsOpen = false
