@@ -10,7 +10,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import { observer, inject } from "mobx-react";
 import { CircularProgress, IconButton } from "@material-ui/core";
-import DetailDialog from '../DetailDialog'
+import ReportDetailDialog from '../ReportDetailDialog'
 import DeleteReportDialog from '../DeleteReportDialog'
 import DeleteIcon from '@material-ui/icons/Delete';
 

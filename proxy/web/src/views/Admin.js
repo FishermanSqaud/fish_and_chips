@@ -15,7 +15,7 @@ import logo from "assets/img/fish_and_chips_icon_48.png";
 import { observer, inject } from "mobx-react";
 import { useHistory } from 'react-router-dom'
 import Snackbars from "./Snackbars.js";
-import DetailDialog from './DetailDialog'
+import ReportDetailDialog from './ReportDetailDialog'
 import DeleteReportDialog from './DeleteReportDialog'
 import MyReportDialog from './MyReportDialog'
 
@@ -37,10 +37,6 @@ const Admin = inject("store")(
     const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
     };
-    const getRoute = () => {
-      return window.location.pathname !== "/admin/maps";
-    };
-
 
     useEffect(() => {
       if (!props.store.isAdmin) {
@@ -89,27 +85,26 @@ const Admin = inject("store")(
             handleDrawerToggle={handleDrawerToggle}
             {...props}
           />
+
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-          {getRoute() ? (
-            <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
-            </div>
-          ) : (
-              <div className={classes.map}>{switchRoutes}</div>
-            )}
-          {getRoute() ? <Footer /> : null}
+
+          <div className={classes.content}>
+            <div className={classes.container}>{switchRoutes}</div>
+          </div>
+
+          <Footer />
         </div>
 
         <Snackbars></Snackbars>
 
         {props.store.isReportDetailDialogOpen &&
-          <DetailDialog />}
+          <ReportDetailDialog />}
 
         {props.store.isDeleteReportOpen &&
           <DeleteReportDialog />}
 
         {props.store.isMyReportOpen &&
-          <MyReportDialog 
+          <MyReportDialog
             name={props.store.targetUserForDetails.name}
             reports={props.store.targetUserForDetails.reports} />}
       </div>

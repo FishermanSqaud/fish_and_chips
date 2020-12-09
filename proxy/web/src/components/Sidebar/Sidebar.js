@@ -28,7 +28,7 @@ export default function Sidebar(props) {
   }
 
   const { color, logo, image, logoText, routes } = props;
-  
+
   var links = (
 
     <List className={classes.list}>
@@ -38,20 +38,9 @@ export default function Sidebar(props) {
         var activePro = " ";
         var listItemClasses;
 
-        if (prop.path === "/upgrade-to-pro") {
-
-          activePro = classes.activePro + " ";
-          listItemClasses = classNames({
-            [" " + classes[color]]: true
-          });
-
-        } else {
-
-          listItemClasses = classNames({
-            [" " + classes[color]]: activeRoute(prop.layout + prop.path)
-          });
-
-        }
+        listItemClasses = classNames({
+          [" " + classes[color]]: activeRoute(prop.layout + prop.path)
+        });
 
 
         const whiteFontClasses = classNames({
@@ -77,12 +66,12 @@ export default function Sidebar(props) {
                   {prop.icon}
                 </Icon>
               ) : (
-                <prop.icon
-                  className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive
-                  })}
-                />
-              )}
+                  <prop.icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive
+                    })}
+                  />
+                )}
 
 
               <ListItemText

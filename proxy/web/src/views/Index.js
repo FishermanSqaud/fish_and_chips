@@ -3,11 +3,11 @@ import MainPage from "./MainPage.js";
 import { observer, inject } from "mobx-react";
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbars from './Snackbars'
-import ReportDialog from './ReportDialog'
+import CreateReportDialog from './CreateReportDialog'
 import LogoutDialog from './LogoutDialog'
 import MyReportDialog from "./MyReportDialog.js";
 import DeleteReportDialog from "./DeleteReportDialog";
-import DetailDialog from "./DetailDialog";
+import ReportDetailDialog from "./ReportDetailDialog";
 import { CircularProgress } from "@material-ui/core";
 import {useHistory} from 'react-router-dom'
 
@@ -16,8 +16,6 @@ const Index = inject("store")(
   observer((props) => {
     const classes = useStyles()
     const history = useHistory()
-
-    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
       document.body.classList.add("index-page");
@@ -52,7 +50,7 @@ const Index = inject("store")(
           <MainPage />
 
           {props.store.isReportDialogOpen &&
-            <ReportDialog />}
+            <CreateReportDialog />}
 
           {props.store.isCheckDialogOpen &&
             <LogoutDialog />}
@@ -68,7 +66,7 @@ const Index = inject("store")(
             <DeleteReportDialog />}
 
           {props.store.isReportDetailDialogOpen &&
-            <DetailDialog />}
+            <ReportDetailDialog />}
         </div>
 
         <Snackbars></Snackbars>

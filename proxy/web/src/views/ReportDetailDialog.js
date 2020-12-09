@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField"
 // require('dotenv').config();
 
-const DetailDialog = inject("store")(
+const ReportDetailDialog = inject("store")(
 	observer((props) => {
 
 		const [isEditMode, setIsEditMode] = useState(false)
@@ -241,7 +241,7 @@ const DetailDialog = inject("store")(
 		)
 	}))
 
-export default DetailDialog
+export default ReportDetailDialog
 
 const showCreatedTime = (date) => {
 	return date.toLocaleDateString() + " " + date.toLocaleTimeString()
