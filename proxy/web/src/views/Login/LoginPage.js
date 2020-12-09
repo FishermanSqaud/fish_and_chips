@@ -9,7 +9,6 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage from '../../assets/img/squad_1.jpg'
@@ -33,11 +32,11 @@ const LoginPage = inject("store")(
 		useEffect(() => {
 
 			if (props.store.isLoggedIn) {
-				if (props.store.isAdmin){
+				if (props.store.isAdmin) {
 					history.push('/admin')
 					return
 				}
-				
+
 				history.push('/')
 				return
 			}
@@ -91,8 +90,8 @@ const LoginPage = inject("store")(
 				}
 
 				const isLoggedIn = await props.store.signIn(requestBody)
-				
-				if (isLoggedIn){
+
+				if (isLoggedIn) {
 
 					props.store.set(
 						"snackbarMsg",
@@ -104,10 +103,10 @@ const LoginPage = inject("store")(
 						true
 					)
 
-					if (props.store.isAdmin){
+					if (props.store.isAdmin) {
 						history.push('/admin')
 
-					}else {
+					} else {
 
 						history.push('/')
 					}
@@ -146,12 +145,35 @@ const LoginPage = inject("store")(
 
 		return (
 			<React.Fragment>
+
 				<Snackbars></Snackbars>
-				<Grid container component="main" className={classes.root}>
+
+				<Grid
+					container
+					component="main"
+					className={classes.root}>
+
 					<CssBaseline />
-					<Grid id="background" item xs={false} sm={4} md={7} className={classes.image} />
-					<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+
+					<Grid
+						id="background"
+						item
+						xs={false}
+						sm={4}
+						md={7}
+						className={classes.image} />
+
+					<Grid
+						item
+						xs={12}
+						sm={8}
+						md={5}
+						component={Paper}
+						elevation={6}
+						square>
+
 						<div className={classes.paper}>
+
 							<Avatar className={classes.avatar}>
 								<img
 									className={classes.icon}
@@ -161,8 +183,12 @@ const LoginPage = inject("store")(
 
 							<Typography component="h1" variant="h5">
 								피쉬앤칩스 로그인
-                        </Typography>
-							<form className={classes.form} noValidate>
+                        	</Typography>
+
+							<form
+								className={classes.form}
+								noValidate>
+
 								<TextField
 									variant="outlined"
 									margin="normal"
@@ -190,7 +216,13 @@ const LoginPage = inject("store")(
 								/>
 
 								<FormControlLabel
-									control={<Checkbox disabled checked value="remember" color="primary" />}
+									control={
+										<Checkbox
+											disabled
+											checked
+											value="remember"
+											color="primary" />
+									}
 									label="자동로그인"
 								/>
 
@@ -203,28 +235,35 @@ const LoginPage = inject("store")(
 									onClick={requestSignIn}
 								>
 									로그인
-                            </Button>
+                </Button>
 
 								<Grid container>
+
 									<Grid item xs>
 										<Link
 											onClick={handleNotSupported}
 											href="#"
 											variant="body2">
 											비밀번호 찾기?
-                                        </Link>
+                    </Link>
 									</Grid>
+
 									<Grid item>
 										<Link href="/signUp" variant="body2">
 											{"회원가입"}
 										</Link>
 									</Grid>
+
 								</Grid>
+
 								<Box mt={5}>
 									<Copyright />
 								</Box>
+
 							</form>
+
 						</div>
+
 					</Grid>
 				</Grid>
 			</React.Fragment>
@@ -236,13 +275,24 @@ export default LoginPage;
 
 function Copyright() {
 	return (
-		<Typography variant="body2" color="textSecondary" align="center">
+		<Typography 
+			variant="body2" 
+			color="textSecondary" 
+			align="center">
+
 			{'Copyright © '}
-			<Link color="inherit" href="https://github.com/FishermanSqaud">
+
+			<Link 
+				color="inherit" 
+				href="https://github.com/FishermanSqaud">
+
 				Team Fisherman Squad
-      </Link>{' '}
+
+			</Link>
+			{' '}
 			{new Date().getFullYear()}
 			{'.'}
+			
 		</Typography>
 	);
 }

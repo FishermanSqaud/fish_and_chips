@@ -102,19 +102,23 @@ const LogoutDialog = inject("store")(
 								{`${props.store.userName}님 정말로 로그아웃하시겠습니까?😢`}
 							</DialogContentText>
 						</DialogContent>
+						
 						<DialogActions>
+							
 							<Button
 								onClick={handleClose}
 								color="primary">
 								취소
-                            </Button>
+              </Button>
+
 							<Button
 								id="confirm"
 								onClick={handleConfirm}
 								color="primary"
 								autoFocus>
 								확인
-                            </Button>
+              </Button>
+
 						</DialogActions>
 					</Dialog>}
 			</div>

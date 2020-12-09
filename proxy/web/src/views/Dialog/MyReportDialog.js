@@ -82,9 +82,6 @@ const MyReportDialog = inject("store")(
 
 export default MyReportDialog
 
-const showCreatedTime = (date) => {
-	return date.toLocaleDateString() + " " + date.toLocaleTimeString()
-}
 
 const useStyles = makeStyles((theme) => ({
 	textFieldTop: {

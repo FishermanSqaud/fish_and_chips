@@ -28,21 +28,21 @@ const SignUp = inject("store")(
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
 
-    useEffect(()=>{
+    useEffect(() => {
 
-      if(props.store.isLoggedIn){
+      if (props.store.isLoggedIn) {
 
-				if (props.store.isAdmin){
-					history.push('/admin')
-					return
-				}
-        
+        if (props.store.isAdmin) {
+          history.push('/admin')
+          return
+        }
+
         history.push('/')
         return
       }
 
       const enterSubmit = (e) => {
-        if (e.keyCode == ENTER_KEY_CODE){
+        if (e.keyCode == ENTER_KEY_CODE) {
           const submitBtn = document.getElementById("submit")
           submitBtn.click()
         }
@@ -54,7 +54,7 @@ const SignUp = inject("store")(
         window.removeEventListener('keyup', enterSubmit)
       }
 
-    },[])
+    }, [])
 
     const isRequiredFilled = (email, name, password) => {
       return (email != "") && (name != "") && (password != "")
@@ -86,7 +86,7 @@ const SignUp = inject("store")(
 
         const response = await props.store.signUp(requestBody)
 
-        if (response.ok){
+        if (response.ok) {
 
           await props.store.signIn(requestBody)
 
@@ -220,7 +220,13 @@ const SignUp = inject("store")(
 
                 <Grid item xs={12}>
                   <FormControlLabel
-                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    control={
+                      <Checkbox
+                        value="allowExtraEmails"
+                        checked
+                        disabled
+                        color="primary" />
+                    }
                     label="(선택) 개인정보 약관에 동의하겠습니다."
                   />
                 </Grid>
@@ -235,15 +241,16 @@ const SignUp = inject("store")(
                 onClick={requestSignUp}
               >
                 회원가입
-          </Button>
+              </Button>
 
               <Grid container justify="flex-end">
                 <Grid item>
                   <Link href="/signIn" variant="body2">
                     이미 회원이신가요? 로그인
-              </Link>
+                  </Link>
                 </Grid>
               </Grid>
+
             </form>
           </div>
           <Box mt={5}>
@@ -259,13 +266,24 @@ export default SignUp;
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography 
+      variant="body2" 
+      color="textSecondary" 
+      align="center">
+
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/FishermanSqaud">
+
+      <Link 
+        color="inherit" 
+        href="https://github.com/FishermanSqaud">
+
         Team Fisherman Squad
-      </Link>{' '}
+
+      </Link>
+      {' '}
       {new Date().getFullYear()}
       {'.'}
+
     </Typography>
   );
 }
@@ -281,7 +299,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     background: "none",
     borderRadius: "0"
-    // backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.

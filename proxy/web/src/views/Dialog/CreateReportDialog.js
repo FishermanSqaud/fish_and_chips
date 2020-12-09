@@ -9,16 +9,10 @@ import TextField from "@material-ui/core/TextField"
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-// require('dotenv').config();
-
-const PAYMENT = 0
-const PERSONAL_INFO = 1
-const ETC = 2
-
-const ENTER_KEY_CODE = 13
 
 const CreateReportDialog = inject("store")(
 	observer((props) => {
+
 		const [inputType, setInputType] = useState(PAYMENT)
 
 		const [reportDomain, setReportDomain] = useState(
@@ -54,7 +48,6 @@ const CreateReportDialog = inject("store")(
 
 			return {
 				spam_domain: domain,
-				// user_id: props.store.userId,
 				title: title,
 				content: content
 			}
@@ -313,6 +306,12 @@ const CreateReportDialog = inject("store")(
 	}))
 
 export default CreateReportDialog
+
+const PAYMENT = 0
+const PERSONAL_INFO = 1
+const ETC = 2
+
+const ENTER_KEY_CODE = 13
 
 const showCreatedTime = (date) => {
 	return date.toLocaleDateString() + " " + date.toLocaleTimeString()

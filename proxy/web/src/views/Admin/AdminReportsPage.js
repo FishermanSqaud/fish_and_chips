@@ -52,7 +52,10 @@ const AdminReportsPage = inject("store")(
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>피싱 신고 내역</h4>
+                <h4 className={classes.cardTitleWhite}>
+                  {cardTitle}
+                </h4>
+
                 <p className={classes.cardCategoryWhite}>
                   {`업데이트 - ${new Date().toLocaleDateString()}`}
                 </p>
@@ -61,10 +64,11 @@ const AdminReportsPage = inject("store")(
                 {props.store.loadingMyReport ?
                   <CircularProgress />
                   :
+
                   <Table
                     openDetail={handleOpenDetail}
                     tableHeaderColor="primary"
-                    tableHead={["신고 도메인", "제목", "사용자", "신고 시각", "삭제"]}
+                    tableHead={reportTableHeadColumns}
                     tableData={props.store.myReports.map((rep) => {
                       return [
                         rep.id,
@@ -90,6 +94,16 @@ const AdminReportsPage = inject("store")(
   }))
 
 export default AdminReportsPage
+
+const cardTitle = "피싱 신고 내역"
+
+const reportTableHeadColumns = [
+  "신고 도메인", 
+  "제목", 
+  "사용자", 
+  "신고 시각", 
+  "삭제"
+]
 
 const styles = {
   cardCategoryWhite: {

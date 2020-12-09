@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button'
 import TablePaginationAction from './TablePaginationAction'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ImageIcon from '@material-ui/icons/Image';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -21,8 +20,6 @@ import TableHead from '@material-ui/core/TableHead';
 const ReportsTable = inject("store")(
 	observer((props) => {
 		const classes = useStyles();
-
-		const [isLoading, setIsLoading] = useState(false)
 
 		const handleChangePage = (e, newPageNum) => {
 			props.store.set(
@@ -52,25 +49,6 @@ const ReportsTable = inject("store")(
 				"isReportDetailDialogOpen",
 				true
 			)
-		}
-
-		const showDataTypeIcon = (type) => {
-
-			switch (Number(type)) {
-				case props.store.FILTER_TEXT:
-					return <TextFieldsIcon color="primary" />
-
-				case props.store.FILTER_OBJECT:
-					return <BlurOnIcon color="secondary" />
-
-				case props.store.FILTER_IMAGE:
-					return <ImageIcon style={{
-						color: 'lightseagreen'
-					}} />
-
-				default:
-					return type
-			}
 		}
 
 		const handleOpenDeleteDialog = (targetReport) => () => {
@@ -296,7 +274,12 @@ const getSlicedRows = (rows, curPageNum, rowsPerPage) => {
 	return resultRows
 }
 
-const rowsPerPageOptions = [10, 15, 20, { label: 'All', value: -1 }]
+const rowsPerPageOptions = [
+	10, 
+	15, 
+	20, 
+	{ label: 'All', value: -1 }
+]
 
 
 const useStyles = makeStyles({
