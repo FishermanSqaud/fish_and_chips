@@ -1,6 +1,7 @@
 const db = require('../configs/db')
-const https = require('https')
 const consts = require('../configs/constants')
+const auth = require('../configs/auth')
+
 require('dotenv').config()
 
 // 목적 : 사용자가 접속한 사이트의 도메인과 DB에 저장된 기업 도메인과 비교
