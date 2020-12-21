@@ -30,8 +30,10 @@ exports.getReportsOfDomain = async (req, res) => {
 
 		var conn = await db.getConn()
 
+		const url = new URL(req.body.spam_domain)
+
 		const userParams = [
-			req.body.spam_domain
+			url.hostname
 		]
 		
 		const result = await conn.sendQuery(
@@ -200,8 +202,10 @@ exports.createReport = async (req, res) => {
 
 		// TO-DO : 로그인 토큰 확인
 
+		const url = new URL(req.body.spam_domain)
+
 		const userParams = [
-			req.body.spam_domain,
+			url.hostname,
 			// req.body.user_id,
 			tokenResult.userId,
 			req.body.title,

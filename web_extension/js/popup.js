@@ -158,10 +158,6 @@ const requestSecurityCheck = async () => {
         requestDomainCheck()
     ])
 
-    // let isEncrypted = await requestEncryptCheck()
-    // let reportCnt = await requestReportCnt()
-    // let isDomainFound = await requestDomainCheck()
-
     return [isEncrypted, reportCnt, isDomainFound]
 }
 
@@ -305,6 +301,7 @@ const chromeTabOption = {
     // 'windowId': chrome.windows.WINDOW_ID_CURRENT,
     lastFocusedWindow: true
 }
+
 
 chrome.tabs.query(chromeTabOption, tabs => {
     const url = tabs[0].url;
